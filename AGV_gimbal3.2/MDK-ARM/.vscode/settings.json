@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "rm_usart.h": "c",
+        "gimbal_task.h": "c",
+        "remote_control.h": "c",
+        "compare": "c",
+        "cstdlib": "c",
+        "cmath": "c",
+        "new": "c",
+        "*.tcc": "c",
+        "type_traits": "c",
+        "typeinfo": "c"
+    }
+}
