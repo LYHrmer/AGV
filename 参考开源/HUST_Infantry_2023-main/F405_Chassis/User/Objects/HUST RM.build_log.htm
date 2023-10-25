@@ -1,0 +1,835 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: μVision V5.32.0.0
+Copyright (C) 2020 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: sdad user, sdad, LIC=8VRJ7-ERYED-MMQ9I-T9VAR-Q96M0-SLGN4
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Plus  Version: 5.32.0.0
+Toolchain Path:  D:\MDK5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 7 (build 960)
+Assembler:       Armasm.exe V5.06 update 7 (build 960)
+Linker/Locator:  ArmLink.exe V5.06 update 7 (build 960)
+Library Manager: ArmAr.exe V5.06 update 7 (build 960)
+Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
+CPU DLL:         SARMCM3.DLL V5.32.0.0
+Dialog DLL:      DCM.DLL V1.17.3.0
+Target DLL:      Segger\JL2CM3.dll V2.99.38.0
+Dialog DLL:      TCM.DLL V1.46.0.0
+ 
+<h2>Project:</h2>
+D:\GitHub_clone\AGV_np\AGV\参考开源\HUST_Infantry_2023-main\F405_Chassis\User\HUST RM .uvprojx
+Project File Date:  10/09/2023
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\MDK5\ARM\ARMCC\Bin'
+Rebuild target 'Target 1'
+compiling system_stm32f4xx.c...
+compiling stm32f4xx_it.c...
+compiling pid.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Algorithm\pid.c: 11 warnings, 0 errors
+compiling FIR.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Algorithm\FIR.c(52): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      return (1-K_Low_setchassis)*(old)+K_Low_setchassis*In;   
+..\Algorithm\FIR.c(62): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      return (1-K_Low_setSteer)*(old)+K_Low_setSteer*In;   
+..\Algorithm\FIR.c(72): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+    past=(1-K_Low_setwheel)*past+K_Low_setwheel*In;
+..\Algorithm\FIR.c(98): warning:  #1-D: last line of file ends without a newline
+  }
+..\Algorithm\FIR.c: 15 warnings, 0 errors
+compiling algorithmOfCRC.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Algorithm\algorithmOfCRC.c: 11 warnings, 0 errors
+compiling DataScope_DP.C...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Algorithm\DataScope_DP.C(61): warning:  #111-D: statement is unreachable
+  		 case 1:   DataScope_OutPut_Buffer[5]  =  5; return  6; break;   
+..\Algorithm\DataScope_DP.C(62): warning:  #111-D: statement is unreachable
+  		 case 2:   DataScope_OutPut_Buffer[9]  =  9; return 10; break;
+..\Algorithm\DataScope_DP.C(63): warning:  #111-D: statement is unreachable
+  		 case 3:   DataScope_OutPut_Buffer[13] = 13; return 14; break;
+..\Algorithm\DataScope_DP.C(64): warning:  #111-D: statement is unreachable
+  		 case 4:   DataScope_OutPut_Buffer[17] = 17; return 18; break;
+..\Algorithm\DataScope_DP.C(65): warning:  #111-D: statement is unreachable
+  		 case 5:   DataScope_OutPut_Buffer[21] = 21; return 22; break; 
+..\Algorithm\DataScope_DP.C(66): warning:  #111-D: statement is unreachable
+  		 case 6:   DataScope_OutPut_Buffer[25] = 25; return 26; break;
+..\Algorithm\DataScope_DP.C(67): warning:  #111-D: statement is unreachable
+  		 case 7:   DataScope_OutPut_Buffer[29] = 29; return 30; break;
+..\Algorithm\DataScope_DP.C(68): warning:  #111-D: statement is unreachable
+  		 case 8:   DataScope_OutPut_Buffer[33] = 33; return 34; break;
+..\Algorithm\DataScope_DP.C(69): warning:  #111-D: statement is unreachable
+  		 case 9:   DataScope_OutPut_Buffer[37] = 37; return 38; break;
+..\Algorithm\DataScope_DP.C(70): warning:  #111-D: statement is unreachable
+       case 10:  DataScope_OutPut_Buffer[41] = 41; return 42; break;
+..\Algorithm\DataScope_DP.C: 21 warnings, 0 errors
+compiling main.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+main.c: 11 warnings, 0 errors
+compiling misc.c...
+compiling stm32f4xx_adc.c...
+compiling stm32f4xx_exti.c...
+compiling stm32f4xx_dma.c...
+compiling stm32f4xx_can.c...
+compiling stm32f4xx_gpio.c...
+assembling startup_stm32f40_41xxx.s...
+compiling stm32f4xx_syscfg.c...
+compiling stm32f4xx_flash.c...
+compiling stm32f4xx_tim.c...
+compiling stm32f4xx_usart.c...
+compiling stm32f4xx_iwdg.c...
+compiling stm32f4xx_dbgmcu.c...
+compiling stm32f4xx_dac.c...
+compiling stm32f4xx_rcc.c...
+compiling stm32f4xx_spi.c...
+compiling ChassisTask.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Task\ChassisTask.c(91): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  			chassis.car_V = LIMIT_MAX_MIN(car_V*10,max_speed*0.7,-max_speed*0.7);
+..\Task\ChassisTask.c(91): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  			chassis.car_V = LIMIT_MAX_MIN(car_V*10,max_speed*0.7,-max_speed*0.7);
+..\Task\ChassisTask.c(91): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  			chassis.car_V = LIMIT_MAX_MIN(car_V*10,max_speed*0.7,-max_speed*0.7);
+..\Task\ChassisTask.c(91): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  			chassis.car_V = LIMIT_MAX_MIN(car_V*10,max_speed*0.7,-max_speed*0.7);
+..\Task\ChassisTask.c(103): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  			chassis.carSpeedw = LIMIT_MAX_MIN(chassisSpeed.carSpeedw*10,max_speed*0.5,-max_speed*0.5);
+..\Task\ChassisTask.c(103): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  			chassis.carSpeedw = LIMIT_MAX_MIN(chassisSpeed.carSpeedw*10,max_speed*0.5,-max_speed*0.5);
+..\Task\ChassisTask.c(103): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  			chassis.carSpeedw = LIMIT_MAX_MIN(chassisSpeed.carSpeedw*10,max_speed*0.5,-max_speed*0.5);
+..\Task\ChassisTask.c(103): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  			chassis.carSpeedw = LIMIT_MAX_MIN(chassisSpeed.carSpeedw*10,max_speed*0.5,-max_speed*0.5);
+..\Task\ChassisTask.c(318): warning:  #177-D: variable "Angular_Velocity"  was declared but never referenced
+  	static short Angular_Velocity;
+..\Task\ChassisTask.c(319): warning:  #177-D: variable "rotation_lim"  was declared but never referenced
+  	float rotation_lim=1.0f;	
+..\Task\ChassisTask.c(525): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+                  if (power_limit->remainEnergy < power_limit->Min_remainEnergy*1.3){	//最小阈值之前都是恒功率		
+..\Task\ChassisTask.c(535): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  			if (power_limit->capEnergy < power_limit->Min_capEnergy*1.2){	//最小阈值之前都是恒功率		
+..\Task\ChassisTask.c(543): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  			if (power_limit->remainEnergy < power_limit->Min_remainEnergy*1.2){	//最小阈值之前都是恒功率		
+..\Task\ChassisTask.c(555): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  			if (power_limit->remainEnergy < power_limit->Min_remainEnergy*1.3){	//最小阈值之前都是恒功率		
+..\Task\ChassisTask.c(574): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          if(super_power->CAP_AD_H+0.5 < super_power->actual_vol && power_limit->Min_capVol-0.5 < super_power->actual_vol)//当前电压大于飞坡所需最小的电容电压才能开启
+..\Task\ChassisTask.c(574): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          if(super_power->CAP_AD_H+0.5 < super_power->actual_vol && power_limit->Min_capVol-0.5 < super_power->actual_vol)//当前电压大于飞坡所需最小的电容电压才能开启
+..\Task\ChassisTask.c(611): warning:  #940-D: missing return statement at end of non-void function "set_powersate" 
+  }
+..\Task\ChassisTask.c(643): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  			power_limit->M[i] = (-P.P*speed_now + P.I*(SumError_last+0.5*(-speed_now+P.LastError)))*RM3508_CURRENT_RATIO;
+..\Task\ChassisTask.c(648): warning:  #177-D: variable "k_s"  was declared but never referenced
+  		double k_s = 1.0;
+..\Task\ChassisTask.c(668): warning:  #177-D: variable "c"  was declared but never referenced
+  	double i_2=0, w_i=0, a, b, c;
+..\Task\ChassisTask.c(718): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  											(power_limit->actual_ina260_power - RM3508_P0 - RM3508_R * (i_2+i_2_6020))/(w_i+w_i_6020));
+..\Task\ChassisTask.c(728): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  		a += RM3508_R * P.SetPoint * P.SetPoint * (power_limit->K[i]) * (power_limit->K[i]);
+..\Task\ChassisTask.c: 33 warnings, 0 errors
+compiling PowerControlTask.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Task\PowerControlTask.c(179): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  	if(superpower.actual_vol<22.5 && powerlimit.set_superpower>10){
+..\Task\PowerControlTask.c(180): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  		superpower.i_set = LIMIT_MAX_MIN(powerlimit.set_superpower/superpower.actual_vol,superpower.max_charge_i, 0.0);
+..\Task\PowerControlTask.c(180): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  		superpower.i_set = LIMIT_MAX_MIN(powerlimit.set_superpower/superpower.actual_vol,superpower.max_charge_i, 0.0);
+..\Task\PowerControlTask.c: 14 warnings, 0 errors
+compiling DataReceiveTask.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Task\DataReceiveTask.c: 11 warnings, 0 errors
+compiling DataSendTask.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Task\DataSendTask.c: 11 warnings, 0 errors
+compiling StartTask.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Task\StartTask.c: 11 warnings, 0 errors
+compiling SDCardTask.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\SD\SDCardTask.c(55): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  		if( start_time_SD > 5.0)
+..\SD\SDCardTask.c(187): warning:  #177-D: variable "i"  was declared but never referenced
+  		static int i = 0;
+..\SD\SDCardTask.c: 13 warnings, 0 errors
+compiling GraphicsSendTask.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Task\GraphicsSendTask.c(316): warning:  #177-D: variable "ShootLineName5"  was declared but never referenced
+      static uint8_t ShootLineName5[] = "SL5";
+..\Task\GraphicsSendTask.c(317): warning:  #177-D: variable "ShootLineName6"  was declared but never referenced
+  	static uint8_t ShootLineName6[] = "SL6";
+..\Task\GraphicsSendTask.c(318): warning:  #177-D: variable "ShootLineName7"  was declared but never referenced
+      static uint8_t ShootLineName7[] = "SL7";
+..\Task\GraphicsSendTask.c(417): warning:  #177-D: variable "LaneLineName1"  was declared but never referenced
+  	static uint8_t LaneLineName1[] = "po1";
+..\Task\GraphicsSendTask.c(419): warning:  #177-D: variable "LaneLineName3"  was declared but never referenced
+  	static uint8_t LaneLineName3[] = "po3";
+..\Task\GraphicsSendTask.c(420): warning:  #177-D: variable "LaneLineName4"  was declared but never referenced
+  	static uint8_t LaneLineName4[] = "po4";
+..\Task\GraphicsSendTask.c(421): warning:  #177-D: variable "LaneLineName5"  was declared but never referenced
+  	static uint8_t LaneLineName5[] = "po5";
+..\Task\GraphicsSendTask.c(423): warning:  #177-D: variable "LaneLineName7"  was declared but never referenced
+  	static uint8_t LaneLineName7[] = "po7";
+..\Task\GraphicsSendTask.c(734): warning:  #177-D: variable "Op_Type"  was declared but never referenced
+  	static int Op_Type = Op_None;
+..\Task\GraphicsSendTask.c: 20 warnings, 0 errors
+compiling croutine.c...
+compiling list.c...
+compiling event_groups.c...
+compiling CPU_Task.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\RTOS_Test\CPU_Task.c: 11 warnings, 0 errors
+compiling queue.c...
+compiling ZeroCheckTask.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Task\ZeroCheckTask.c: 11 warnings, 0 errors
+compiling tasks.c...
+compiling heap_4.c...
+compiling timers.c...
+compiling port.c...
+compiling iwdg.c...
+compiling can1.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Hardware\can1.c: 11 warnings, 0 errors
+compiling can2.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Hardware\can2.c: 11 warnings, 0 errors
+compiling tim2.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Hardware\tim2.c: 11 warnings, 0 errors
+compiling tim4.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Hardware\tim4.c(59): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  			if(start_time_SD > 5.0){
+..\Hardware\tim4.c: 12 warnings, 0 errors
+compiling adc.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Hardware\adc.c: 11 warnings, 0 errors
+compiling ina260.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.c(22): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  	INA260_1.Current = LSB_CURRENT * Cur;
+..\Hardware\ina260.c(24): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  	INA260_2.Current = LSB_CURRENT * Cur;
+..\Hardware\ina260.c(36): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  	INA260_1.Voltage = LSB_VOLTAGE * Vol;
+..\Hardware\ina260.c(38): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  	INA260_2.Voltage = LSB_VOLTAGE * Vol;
+..\Hardware\ina260.c: 15 warnings, 0 errors
+compiling i2c.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Hardware\i2c.c: 11 warnings, 0 errors
+compiling dac.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Hardware\dac.c: 11 warnings, 0 errors
+compiling usart2.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Hardware\usart2.c: 11 warnings, 0 errors
+compiling arm_mat_init_f32.c...
+compiling uart4.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Hardware\uart4.c(22): warning:  #177-D: variable "dma"  was declared but never referenced
+  	DMA_InitTypeDef   dma;
+..\Hardware\uart4.c: 12 warnings, 0 errors
+compiling arm_mat_mult_f32.c...
+compiling arm_mat_add_f32.c...
+compiling arm_mat_scale_f32.c...
+compiling arm_mat_sub_f32.c...
+compiling tools.c...
+compiling ff.c...
+compiling counter.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\Hardware\counter.c: 11 warnings, 0 errors
+compiling SEGGER_RTT.c...
+compiling diskio.c...
+compiling SEGGER_RTT_printf.c...
+compiling debug.c...
+compiling os_tick.c...
+compiling bsp_spi_sdcard.c...
+..\RTOS_Test\tools.h(10): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 5 of "..\User\main.h")
+  #define LIMIT_MAX_MIN(x, max, min) (((x) <= (min)) ? (min) : (((x) >= (max)) ? (max) : (x)))
+..\Hardware\ina260.h(35): warning:  #1295-D: Deprecated declaration INA_cal_capVol - give arg types
+  float INA_cal_capVol();
+..\Task\PowerControlTask.h(4): warning:  #47-D: incompatible redefinition of macro "Bat_on"  (declared at line 66 of "..\Hardware\adc.h")
+  #define Bat_on	GPIO_SetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(5): warning:  #47-D: incompatible redefinition of macro "Bat_off"  (declared at line 67 of "..\Hardware\adc.h")
+  #define Bat_off	GPIO_ResetBits(GPIOC,GPIO_Pin_5)
+..\Task\PowerControlTask.h(6): warning:  #47-D: incompatible redefinition of macro "CAP_on"  (declared at line 68 of "..\Hardware\adc.h")
+  #define CAP_on	GPIO_SetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(7): warning:  #47-D: incompatible redefinition of macro "CAP_off"  (declared at line 69 of "..\Hardware\adc.h")
+  #define CAP_off	GPIO_ResetBits(GPIOC,GPIO_Pin_4)
+..\Task\PowerControlTask.h(8): warning:  #47-D: incompatible redefinition of macro "Charge_On"  (declared at line 70 of "..\Hardware\adc.h")
+  #define Charge_On	GPIO_SetBits(GPIOA,GPIO_Pin_6)
+..\Task\PowerControlTask.h(9): warning:  #47-D: incompatible redefinition of macro "Charge_Off"  (declared at line 71 of "..\Hardware\adc.h")
+  #define Charge_Off	GPIO_ResetBits(GPIOA,GPIO_Pin_6)
+..\SD\SDCardTask.h(97): warning:  #1295-D: Deprecated declaration Init_SDcard - give arg types
+  void Init_SDcard();
+..\SD\SDCardTask.h(100): warning:  #1295-D: Deprecated declaration ReadSDCard - give arg types
+  void ReadSDCard();
+..\User\main.h(68): warning:  #47-D: incompatible redefinition of macro "LIMIT_MAX_MIN"  (declared at line 10 of "..\RTOS_Test\tools.h")
+  #define LIMIT_MAX_MIN(x, max, min)	(((x) <= (min)) ? (min):(((x) >= (max)) ? (max) : (x)))
+..\SD\bsp_spi_sdcard.c: 11 warnings, 0 errors
+linking...
+Program Size: Code=43284 RO-data=3440 RW-data=604 ZI-data=33116  
+".\Objects\HUST RM.axf" - 0 Error(s), 342 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.7.0.pack
+                ARM.CMSIS.5.7.0
+                CMSIS (Cortex Microcontroller Software Interface Standard)
+   * Component: DSP Variant: Library Version: 1.8.0
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.STM32F4xx_DFP.2.16.0.pack
+                Keil.STM32F4xx_DFP.2.16.0
+                STMicroelectronics STM32F4 Series Device Support, Drivers and Examples
+
+<h2>Collection of Component include folders:</h2>
+  .\RTE\_Target_1
+  D:\MDK5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Include
+  D:\MDK5\ARM\PACK\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:DSP:Library:1.8.0
+      Library file:  CMSIS\DSP\Lib\ARM\arm_cortexM4lf_math.lib
+      Include file:  CMSIS\DSP\Include\arm_math.h
+Build Time Elapsed:  00:00:07
+</pre>
+</body>
+</html>
