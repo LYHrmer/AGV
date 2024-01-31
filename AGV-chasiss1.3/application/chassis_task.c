@@ -815,7 +815,7 @@ void CHASSIC_MOTOR_POWER_CONTROL(chassis_move_t *chassis_motor)
 	
 	input_power = max_power_limit - chassis_motor->buffer_pid.out; //通过裁判系统的最大功率
 	
-	chassis_motor->power_control.power_charge = input_power; //超级电容的最大充电功率
+	chassis_motor->power_control.power_charge = input_power*100; //超级电容的最大充电功率
 	
 	if(chassis_motor->power_control.power_charge>13000)		chassis_motor->power_control.power_charge =13000; //参考超电控制板允许的最大充电功率，溪地板子的新老不一样
 	
