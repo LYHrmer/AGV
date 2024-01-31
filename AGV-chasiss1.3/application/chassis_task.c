@@ -256,8 +256,8 @@ static void chassis_init(chassis_move_t *chassis_move_init)
 	first_order_filter_init(&chassis_move_init->chassis_cmd_slow_set_vx, CHASSIS_CONTROL_TIME, chassis_x_order_filter);
 	first_order_filter_init(&chassis_move_init->chassis_cmd_slow_set_vy, CHASSIS_CONTROL_TIME, chassis_y_order_filter);
 	// 斜坡函数初始化
-	 ramp_init(&chassis_move_init->vx_ramp, 0.004f, 20, -20);
-   ramp_init(&chassis_move_init->vy_ramp, 0.004f, 10, -10);
+	 ramp_init(&chassis_move_init->vx_ramp, 0.002f, 20, -20);
+   ramp_init(&chassis_move_init->vy_ramp, 0.002f, 10, -10);
 	// 轮电机转动方向初始化
 	chassis_move_init->Forward_L.Judge_Speed_Direction = chassis_move_init->Forward_R.Judge_Speed_Direction =
 		chassis_move_init->Back_L.Judge_Speed_Direction = chassis_move_init->Back_R.Judge_Speed_Direction = 1.0f;
@@ -802,10 +802,10 @@ void CHASSIC_MOTOR_POWER_CONTROL(chassis_move_t *chassis_motor)
 	uint16_t max_power_limit = 40;
 	fp32 input_power = 0;		 // 输入功率(缓冲能量环)
 	fp32 scaled_motor_power[4];
-	fp32 toque_coefficient = 1.99688994e-6f; // (20/16384)*(0.3)*(187/3591)/9.55  此参数将电机电流转换为扭矩
-	fp32 k2 = 1.23e-07;						 // 放大系数
-	fp32 k1 = 1.453e-07;					 // 放大系数
-	fp32 constant = 4.081f;  //3508电机的机械损耗
+//	fp32 toque_coefficient = 1.99688994e-6f; // (20/16384)*(0.3)*(187/3591)/9.55  此参数将电机电流转换为扭矩
+//	fp32 k2 = 1.23e-07;						 // 放大系数
+//	fp32 k1 = 1.453e-07;					 // 放大系数
+//	fp32 constant_3508 = 4.081f;  //3508电机的机械损耗
 	chassis_motor->power_control.POWER_MAX = 0; //最终底盘的最大功率
 	chassis_motor->power_control.forecast_total_power = 0; // 预测总功率
 	
@@ -821,7 +821,7 @@ void CHASSIC_MOTOR_POWER_CONTROL(chassis_move_t *chassis_motor)
 	
 	CAN_CMD_cap(chassis_motor->power_control.power_charge); // 设置超电的充电功率
 
-	if (get_cap.capvot > 16) //当超电电压大于某个值(防止C620掉电)
+	if (get_cap.capvot > 15) //当超电电压大于某个值(防止C620掉电)
 	{
 		if (chassis_move.key_C == 8000)   //主动超电，一般用于起步加速or冲刺or飞坡or上坡，chassis_move.key_C为此代码中超电开启按键
 		{
@@ -834,7 +834,7 @@ void CHASSIC_MOTOR_POWER_CONTROL(chassis_move_t *chassis_motor)
 	}
 	else
 	{
-		chassis_motor->power_control.POWER_MAX = input_power;
+		chassis_motor->power_control.POWER_MAX = input_power-5;
 	}
 
 	for (uint8_t i = 0; i < 4; i++) // 获得所有3508电机的功率和总功率
@@ -842,7 +842,7 @@ void CHASSIC_MOTOR_POWER_CONTROL(chassis_move_t *chassis_motor)
 		chassis_motor->power_control.forecast_motor_power[i] =
     		chassis_motor->motor_chassis[i].give_current * toque_coefficient * chassis_motor->motor_chassis[i].chassis_motor_measure->speed_rpm +
 				k1 * chassis_motor->motor_chassis[i].chassis_motor_measure->speed_rpm * chassis_motor->motor_chassis[i].chassis_motor_measure->speed_rpm +
-				k2* chassis_motor->motor_chassis[i].give_current *chassis_motor->motor_chassis[i].give_current + constant;
+				k2* chassis_motor->motor_chassis[i].give_current *chassis_motor->motor_chassis[i].give_current + constant_3508;
 
 		if (chassis_motor->power_control.forecast_motor_power < 0)  	continue; // 忽略负电
 		
@@ -859,7 +859,7 @@ void CHASSIC_MOTOR_POWER_CONTROL(chassis_move_t *chassis_motor)
 			if (scaled_motor_power[i] < 0)		continue;
 
 			fp32 b = toque_coefficient * chassis_motor->motor_chassis[i].chassis_motor_measure->speed_rpm;
-			fp32 c = k1 * chassis_motor->motor_chassis[i].chassis_motor_measure->speed_rpm * chassis_motor->motor_chassis[i].chassis_motor_measure->speed_rpm - scaled_motor_power[i] + constant;
+			fp32 c = k1 * chassis_motor->motor_chassis[i].chassis_motor_measure->speed_rpm * chassis_motor->motor_chassis[i].chassis_motor_measure->speed_rpm - scaled_motor_power[i] + constant_3508;
 
 			if (chassis_motor->motor_chassis[i].give_current> 0)  //避免超过最大电流
 			{					

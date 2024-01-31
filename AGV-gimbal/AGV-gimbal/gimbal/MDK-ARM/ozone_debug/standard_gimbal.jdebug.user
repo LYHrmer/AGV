@@ -1,0 +1,18 @@
+
+
+OpenDocument="gimbal_task.c", FilePath="/home/yuanluochen/code/QIqi-standard-robot/gimbal/application/gimbal_task.c", Line=177
+OpenDocument="INS_task.c", FilePath="/home/yuanluochen/code/QIqi-standard-robot/gimbal/application/INS_task.c", Line=45
+OpenDocument="INS_task.h", FilePath="/home/yuanluochen/code/QIqi-standard-robot/gimbal/application/INS_task.h", Line=45
+OpenDocument="stm32f4xx_it.c", FilePath="/home/yuanluochen/code/QIqi-standard-robot/gimbal/Src/stm32f4xx_it.c", Line=87
+OpenDocument="main.c", FilePath="/home/yuanluochen/code/QIqi-standard-robot/gimbal/Src/main.c", Line=78
+OpenToolbar="Debug", Floating=0, x=0, y=0
+OpenWindow="Source Files", DockArea=LEFT, x=0, y=0, w=440, h=630, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Disassembly", DockArea=RIGHT, x=0, y=0, w=300, h=238, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Memory 1", DockArea=BOTTOM, x=1, y=0, w=956, h=318, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, EditorAddress=0x0
+OpenWindow="Local Data", DockArea=RIGHT, x=0, y=1, w=300, h=386, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Console", DockArea=BOTTOM, x=0, y=0, w=958, h=318, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+SmartViewPlugin="", Page="", Toolbar="Hidden", Window="SmartView 1"
+TableHeader="Local Data", SortCol="Name", SortOrder="ASCENDING", VisibleCols=["Name";"Value";"Location";"Size";"Type";"Scope"], ColWidths=[100;100;100;100;100;100]
+TableHeader="Source Files", SortCol="File", SortOrder="DESCENDING", VisibleCols=["File";"Status";"Size";"#Insts";"Path"], ColWidths=[234;100;100;100;100]
+TableHeader="Power Sampling", SortCol="None", SortOrder="ASCENDING", VisibleCols=["Index";"Time";"Ch 0"], ColWidths=[100;100;100]
+TableHeader="RegisterSelectionDialog", SortCol="None", SortOrder="ASCENDING", VisibleCols=[], ColWidths=[]

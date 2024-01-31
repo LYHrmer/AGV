@@ -60,6 +60,12 @@
 //底盘电机最大速度
 #define MAX_WHEEL_SPEED 20.0f
 
+//功率控制相关参数
+#define toque_coefficient 1.99688994e-6f // (20/16384)*(0.3)*(187/3591)/9.55  此参数将电机电流转换为扭矩
+#define k2 1.23e-07						 // 放大系数
+#define k1 1.453e-07					 // 放大系数
+#define constant_3508 4.081f  //3508电机的机械损耗
+
 //底盘3508最大can发送电流值
 #define MAX_MOTOR_CAN_CURRENT 16000.0f
 
