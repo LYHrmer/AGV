@@ -830,6 +830,12 @@ void CHASSIC_MOTOR_POWER_CONTROL(chassis_move_t *chassis_motor)
 		else
 		{
 			chassis_motor->power_control.POWER_MAX = input_power + 10;  //被动超电，相对以往能跑得更快点
+			/***后续内容自补充
+			if(get_cap.capvot > 19&&chassis_motor->chassis_power_buffer>20)
+			chassis_motor->power_control.POWER_MAX = input_power + 20;
+			else
+			chassis_motor->power_control.POWER_MAX = input_power + 10; 
+			***/
 		}
 	}
 	else
