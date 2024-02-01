@@ -62,9 +62,9 @@
 
 //功率控制相关参数
 #define toque_coefficient 1.99688994e-6f // (20/16384)*(0.3)*(187/3591)/9.55  此参数将电机电流转换为扭矩
-#define k2 1.23e-07						 // 放大系数
-#define k1 1.453e-07					 // 放大系数
-#define constant_3508 4.081f  //3508电机的机械损耗
+#define k2 1.23e-07						 // 铜损系数
+#define k1 1.453e-07					 // 磁损系数
+#define constant_3508 4.081f  //控制器静态误差
 
 //底盘3508最大can发送电流值
 #define MAX_MOTOR_CAN_CURRENT 16000.0f
@@ -109,7 +109,7 @@
 #define M3505_MOTOR_POWER_PID_KP 1.0f
 #define M3505_MOTOR_POWER_PID_KI 0.5f
 #define M3505_MOTOR_POWER_PID_KD 0.f
-#define M3505_MOTOR_POWER_PID_MAX_OUT 30.0f
+#define M3505_MOTOR_POWER_PID_MAX_OUT 30.0f  //60 
 #define M3505_MOTOR_POWER_PID_MAX_IOUT 10.0f
 
 //m3508转化成底盘速度(m/s)的比例，做两个宏 是因为可能换电机需要更换比例

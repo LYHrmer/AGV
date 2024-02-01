@@ -802,12 +802,9 @@ void CHASSIC_MOTOR_POWER_CONTROL(chassis_move_t *chassis_motor)
 	uint16_t max_power_limit = 40;
 	fp32 input_power = 0;		 // 输入功率(缓冲能量环)
 	fp32 scaled_motor_power[4];
-//	fp32 toque_coefficient = 1.99688994e-6f; // (20/16384)*(0.3)*(187/3591)/9.55  此参数将电机电流转换为扭矩
-//	fp32 k2 = 1.23e-07;						 // 放大系数
-//	fp32 k1 = 1.453e-07;					 // 放大系数
-//	fp32 constant_3508 = 4.081f;  //3508电机的机械损耗
-	chassis_motor->power_control.POWER_MAX = 0; //最终底盘的最大功率
-	chassis_motor->power_control.forecast_total_power = 0; // 预测总功率
+
+	chassis_motor->power_control.POWER_MAX = 0; //最终底盘的最大功率初始化
+	chassis_motor->power_control.forecast_total_power = 0; // 预测总功率初始化
 	
 	PID_Calc(&chassis_motor->buffer_pid, chassis_motor->chassis_power_buffer, 30); //使缓冲能量维持在一个稳定的范围,这里的PID没必要移植我的，用任意一个就行
 
