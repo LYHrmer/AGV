@@ -688,7 +688,6 @@ static void Rudder_motor_relative_angle_control(Rudder_Motor_t *chassis_motor)
 	}
 	else
 	{
-//	chassis_motor->ecd_set = chassis_motor->ecd_zero_set;
 		chassis_motor->ecd_set=chassis_motor->gimbal_motor_measure->ecd;
 	}
 
@@ -971,7 +970,6 @@ void chassis_rc_to_control_vector(fp32 *vx_set, fp32 *vy_set, chassis_move_t *ch
 
 //    ramp_calc(&chassis_move_rc_to_vector->vx_ramp, -chassis_move_rc_to_vector->vx_set_CANsend/100);
 //    ramp_calc(&chassis_move_rc_to_vector->vy_ramp, -chassis_move_rc_to_vector->vy_set_CANsend/100);
-
 //	*vx_set += chassis_move_rc_to_vector->vx_ramp.out;
 //	*vy_set += chassis_move_rc_to_vector->vy_ramp.out;
 	

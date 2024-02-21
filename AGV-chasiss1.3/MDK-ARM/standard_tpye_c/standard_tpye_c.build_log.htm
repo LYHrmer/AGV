@@ -27,7 +27,22 @@ Project File Date:  01/18/2024
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\MDK5\ARM\ARMCC\Bin'
 Build target 'infantry_C'
-"standard_tpye_c\standard_tpye_c.axf" - 0 Error(s), 0 Warning(s).
+compiling pid.c...
+compiling stm32.c...
+compiling chassis_behaviour.c...
+compiling freertos.c...
+compiling CAN_receive.c...
+compiling main.c...
+compiling chassis_task.c...
+..\application\chassis_task.c(630): warning:  #177-D: function "Rudder_motor_zero_ecd_set"  was declared but never referenced
+  static void Rudder_motor_zero_ecd_set(chassis_move_t *Rudder_ecd_set)
+..\application\chassis_task.c(490): warning:  #177-D: function "rudder_optimal_angle_solution"  was declared but never referenced
+  static void rudder_optimal_angle_solution(Rudder_Motor_t *rudder_optimal_angle)
+..\application\chassis_task.c: 2 warnings, 0 errors
+linking...
+Program Size: Code=88300 RO-data=2968 RW-data=648 ZI-data=49952  
+FromELF: creating hex file...
+"standard_tpye_c\standard_tpye_c.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -50,7 +65,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.4.0
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:12
 </pre>
 </body>
 </html>
