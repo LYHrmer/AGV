@@ -542,11 +542,7 @@ static void chassic_rudder_preliminary_A_S_solution(chassis_move_t *chassic_rudd
 	chassic_rudder_preliminary_solution->Back_L.ecd_add = chassic_rudder_preliminary_solution->Back_L.rudder_angle / Motor_Ecd_to_Rad;
 	chassic_rudder_preliminary_solution->Back_R.ecd_add = chassic_rudder_preliminary_solution->Back_R.rudder_angle / Motor_Ecd_to_Rad;
 	chassic_rudder_preliminary_solution->Forward_R.ecd_add = chassic_rudder_preliminary_solution->Forward_R.rudder_angle / Motor_Ecd_to_Rad;
-	// 最优角处理
-//	rudder_optimal_angle_solution(&chassic_rudder_preliminary_solution->Forward_L);
-//	rudder_optimal_angle_solution(&chassic_rudder_preliminary_solution->Back_L);
-//	rudder_optimal_angle_solution(&chassic_rudder_preliminary_solution->Back_R);
-//	rudder_optimal_angle_solution(&chassic_rudder_preliminary_solution->Forward_R);
+
 	// 数据更新
 	chassic_rudder_preliminary_solution->Forward_L.last_ecd_add = chassic_rudder_preliminary_solution->Forward_L.ecd_add;
 	chassic_rudder_preliminary_solution->Back_L.last_ecd_add = chassic_rudder_preliminary_solution->Back_L.ecd_add;
@@ -967,7 +963,7 @@ void chassis_rc_to_control_vector(fp32 *vx_set, fp32 *vy_set, chassis_move_t *ch
 		kw = 1.0f;
 	}
 
-	// 一阶低通滤波代替斜波作为底盘速度输入
+	// 一阶低通滤波作为底盘速度输入
 	first_order_filter_cali(&chassis_move_rc_to_vector->chassis_cmd_slow_set_vx, -chassis_move_rc_to_vector->vx_set_CANsend/100);
 	first_order_filter_cali(&chassis_move_rc_to_vector->chassis_cmd_slow_set_vy, -chassis_move_rc_to_vector->vy_set_CANsend/100);
 

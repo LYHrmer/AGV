@@ -33,7 +33,7 @@
 #define CHASSIS_CONTROL_TIME 0.002
 
 //底盘低通滤波系数
-#define CHASSIS_ACCEL_X_NUM 0.015f
+#define CHASSIS_ACCEL_X_NUM 0.02f
 #define CHASSIS_ACCEL_Y_NUM 0.01f
 
 //X，Y角度与遥控器输入比例
