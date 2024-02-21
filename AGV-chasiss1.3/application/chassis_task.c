@@ -450,17 +450,19 @@ static void chassis_set_contorl(chassis_move_t *chassis_move_control)
 		chassis_move_control->vx_set = cos_yaw * vx_set + sin_yaw * vy_set;
 		chassis_move_control->vy_set = -1.0f * sin_yaw * vx_set + cos_yaw * vy_set;
 		chassis_move_control->chassis_relative_angle_set = rad_format(0.0);
+		
+		chassis_move_control->wz_set = 10.0f;
 
-//		if (fabs(chassis_move_control->vx_set_CANsend) > 50 || fabs(chassis_move_control->vy_set_CANsend) > 50)
-//		{
-
+		if (fabs(chassis_move_control->vx_set_CANsend) > 50 || fabs(chassis_move_control->vy_set_CANsend) > 50)
+		{
+			chassis_move_control->wz_set *= 0.4f;
+			chassis_move_control->vx_set *= 1.4f;
+			chassis_move_control->vy_set *= 1.4f;
+		}
+		else // 当原地时，加大转速
+		{
 			chassis_move_control->wz_set = 15.0f;
-//		}
-//		else // 当原地时，加大转速
-//		{
-//	    ramp_calc(&chassis_move_control->vx_ramp, -10);
-//			chassis_move_control->wz_set = chassis_move_control->vx_ramp.out;
-//		}
+		}
 	}
 	else if (chassis_move_control->chassis_motor_mode == CHASSIS_VECTOR_NO_FOLLOW_YAW)
 	{
