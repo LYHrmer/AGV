@@ -45,12 +45,6 @@ void ramp_calc(ramp_function_source_t *ramp_source_type, fp32 input)
 
     ramp_source_type->input = input;
 	
-		ramp_source_type->slide[7]=ramp_source_type->slide[6];
-		ramp_source_type->slide[6]=ramp_source_type->slide[5];
-		ramp_source_type->slide[5]=ramp_source_type->slide[4];
-		ramp_source_type->slide[4]=ramp_source_type->slide[3];
-		ramp_source_type->slide[3]=ramp_source_type->slide[2];
-		ramp_source_type->slide[2]=ramp_source_type->slide[1];
 		ramp_source_type->slide[1]=ramp_source_type->slide[0];
 		ramp_source_type->slide[0]=ramp_source_type->input;
 	

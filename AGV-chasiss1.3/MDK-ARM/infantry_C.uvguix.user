@@ -3651,9 +3651,9 @@
       </Doc>
       <Doc>
         <Name>..\components\algorithm\user_lib.c</Name>
-        <ColumnNumber>32</ColumnNumber>
+        <ColumnNumber>2</ColumnNumber>
         <TopLine>39</TopLine>
-        <CurrentLine>68</CurrentLine>
+        <CurrentLine>47</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>
