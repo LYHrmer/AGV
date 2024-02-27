@@ -965,19 +965,11 @@ void chassis_rc_to_control_vector(fp32 *vx_set, fp32 *vy_set, chassis_move_t *ch
 	}
 
 	// 一阶低通滤波作为底盘速度输入
-	first_order_filter_cali(&chassis_move_rc_to_vector->chassis_cmd_slow_set_vx, -chassis_move_rc_to_vector->vx_set_CANsend/100);
-	first_order_filter_cali(&chassis_move_rc_to_vector->chassis_cmd_slow_set_vy, -chassis_move_rc_to_vector->vy_set_CANsend/100);
-
-//    ramp_calc(&chassis_move_rc_to_vector->vx_ramp, -chassis_move_rc_to_vector->vx_set_CANsend/100);
-//    ramp_calc(&chassis_move_rc_to_vector->vy_ramp, -chassis_move_rc_to_vector->vy_set_CANsend/100);
-//	*vx_set += chassis_move_rc_to_vector->vx_ramp.out;
-//	*vy_set += chassis_move_rc_to_vector->vy_ramp.out;
+    ramp_calc(&chassis_move_rc_to_vector->vx_ramp, -chassis_move_rc_to_vector->vx_set_CANsend/100);
+    ramp_calc(&chassis_move_rc_to_vector->vy_ramp, -chassis_move_rc_to_vector->vy_set_CANsend/100);
 	
-	if(fabs(chassis_move_rc_to_vector->chassis_cmd_slow_set_vx.out)<0.1 ) chassis_move_rc_to_vector->chassis_cmd_slow_set_vx.out=0;
-	if(fabs(chassis_move_rc_to_vector->chassis_cmd_slow_set_vy.out)<0.1 ) chassis_move_rc_to_vector->chassis_cmd_slow_set_vy.out=0;
-	
-	*vx_set += chassis_move_rc_to_vector->chassis_cmd_slow_set_vx.out;
-	*vy_set += chassis_move_rc_to_vector->chassis_cmd_slow_set_vy.out;
+	*vx_set += chassis_move_rc_to_vector->vx_ramp.out;
+	*vy_set += chassis_move_rc_to_vector->vy_ramp.out;
 	
 	*vx_set = kx * (*vx_set);
 	*vy_set = ky * (*vy_set);
