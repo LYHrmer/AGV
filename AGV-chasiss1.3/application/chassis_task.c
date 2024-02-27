@@ -256,8 +256,8 @@ static void chassis_init(chassis_move_t *chassis_move_init)
 	first_order_filter_init(&chassis_move_init->chassis_cmd_slow_set_vx, CHASSIS_CONTROL_TIME, chassis_x_order_filter);
 	first_order_filter_init(&chassis_move_init->chassis_cmd_slow_set_vy, CHASSIS_CONTROL_TIME, chassis_y_order_filter);
 	// 斜坡函数初始化
-	 ramp_init(&chassis_move_init->vx_ramp, 0.002f, 20, -20);
-   ramp_init(&chassis_move_init->vy_ramp, 0.002f, 10, -10);
+	 ramp_init(&chassis_move_init->vx_ramp, 0.01f, 20, -20);
+   ramp_init(&chassis_move_init->vy_ramp, 0.01f, 10, -10);
 	// 轮电机转动方向初始化
 	chassis_move_init->Forward_L.Judge_Speed_Direction = chassis_move_init->Forward_R.Judge_Speed_Direction =
 		chassis_move_init->Back_L.Judge_Speed_Direction = chassis_move_init->Back_R.Judge_Speed_Direction = 1.0f;
