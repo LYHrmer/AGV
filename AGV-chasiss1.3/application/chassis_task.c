@@ -451,7 +451,7 @@ static void chassis_set_contorl(chassis_move_t *chassis_move_control)
 		chassis_move_control->vy_set = -1.0f * sin_yaw * vx_set + cos_yaw * vy_set;
 		chassis_move_control->chassis_relative_angle_set = rad_format(0.0);
 		
-		chassis_move_control->wz_set = 10.0f;
+		chassis_move_control->wz_set = 5.0f;
 
 		if (fabs(chassis_move_control->vx_set_CANsend) > 50 || fabs(chassis_move_control->vy_set_CANsend) > 50)
 		{
