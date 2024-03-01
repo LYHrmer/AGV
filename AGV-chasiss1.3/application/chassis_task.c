@@ -721,7 +721,7 @@ static void Rudder_motor_relative_angle_control(Rudder_Motor_t *chassis_motor)
 	// 计算根据舵角误差，计算cosK,以削减轮电机转速
 		angle = (chassis_motor->ecd_error)*Motor_Ecd_to_Rad;
 	if(fabs(angle)>90) angle = 90;
-	else if(fabs(angle)<0.5) angle = 0;
+	else if(fabs(angle)<0.5) angle = 0;  //防止因极小的误差导致四个轮子转速不一样
   chassis_motor->Judge_Speed_cosk  = arm_cos_f32(angle)*arm_cos_f32(angle)*arm_cos_f32(angle);
 
 	
@@ -735,10 +735,8 @@ static void Rudder_motor_relative_angle_control(Rudder_Motor_t *chassis_motor)
  */
 static void RUDDER_MOTOR_PID_CONTROL(Rudder_Motor_t *rudder_motor)
 {
-
 	Matlab_PID_Calc(rudder_motor->ecd_error, 0, 0, &rudder_motor->rudder_control);
 	rudder_motor->given_current = rudder_motor->rudder_control.rudder_out.Out1;
-
 }
 
 /**
