@@ -223,10 +223,6 @@ static void chassis_init(chassis_move_t *chassis_move_init)
 		return;
 	}
 	chassis_move_init->chassis_rc_ctrl = get_remote_control_point();
-
-	const static fp32 chassis_x_order_filter[1] = {CHASSIS_ACCEL_X_NUM};
-	const static fp32 chassis_y_order_filter[1] = {CHASSIS_ACCEL_Y_NUM};
-
 	chassis_move_init->chassis_rc_ctrl = get_remote_control_point();
 	// 舵电机数据指针获取
 	chassis_move_init->Forward_L.gimbal_motor_measure = get_Forward_L_motor_measure_point();
@@ -252,9 +248,6 @@ static void chassis_init(chassis_move_t *chassis_move_init)
 	PID_Init(&chassis_move_init->buffer_pid, PID_POSITION, power_buffer_pid, M3505_MOTOR_POWER_PID_MAX_OUT, M3505_MOTOR_POWER_PID_MAX_IOUT);
 	// 遥控器数据指针获取
 	chassis_move_init->chassis_rc_ctrl = get_remote_control_point();
-	// 一阶低通滤波初始化
-	first_order_filter_init(&chassis_move_init->chassis_cmd_slow_set_vx, CHASSIS_CONTROL_TIME, chassis_x_order_filter);
-	first_order_filter_init(&chassis_move_init->chassis_cmd_slow_set_vy, CHASSIS_CONTROL_TIME, chassis_y_order_filter);
 	// 斜坡函数初始化
 	 ramp_init(&chassis_move_init->vx_ramp, 0.01f, 20, -20);
    ramp_init(&chassis_move_init->vy_ramp, 0.01f, 10, -10);
@@ -962,7 +955,7 @@ void chassis_rc_to_control_vector(fp32 *vx_set, fp32 *vy_set, chassis_move_t *ch
 		kw = 1.0f;
 	}
 
-	// 一阶低通滤波作为底盘速度输入
+	// 斜波函数作为底盘速度输入
     ramp_calc(&chassis_move_rc_to_vector->vx_ramp, -chassis_move_rc_to_vector->vx_set_CANsend/100);
     ramp_calc(&chassis_move_rc_to_vector->vy_ramp, -chassis_move_rc_to_vector->vy_set_CANsend/100);
 	
