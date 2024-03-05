@@ -794,7 +794,7 @@ void CHASSIC_MOTOR_POWER_CONTROL(chassis_move_t *chassis_motor)
 	chassis_motor->power_control.POWER_MAX = 0; //最终底盘的最大功率初始化
 	chassis_motor->power_control.forecast_total_power = 0; // 预测总功率初始化
 	
-	PID_Calc(&chassis_motor->buffer_pid, chassis_motor->chassis_power_buffer, 30); //使缓冲能量维持在一个稳定的范围,这里的PID没必要移植我的，用任意一个就行
+	PID_Calc(&chassis_motor->buffer_pid, chassis_motor->chassis_power_buffer, 20); //使缓冲能量维持在一个稳定的范围
 
 	max_power_limit = chassis_motor->chassis_power_MAX;  //获得裁判系统的功率限制数值
 	
