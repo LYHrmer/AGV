@@ -667,50 +667,7 @@ static void rudder_control_loop(chassis_move_t *rudder_move_control_loop)
 	Rudder_motor_relative_angle_control(&rudder_move_control_loop->Forward_R);
 }
 
-/**
- * @brief          舵电机零点过边界处理
- * @author         XQL
- * @param[in]      Rudder_ecd_judge
- * @retval         none
- */
-//static void Rudder_motor_ecd_judge(Rudder_Motor_t *Rudder_ecd_judge)
-//{
 
-//	if (Rudder_ecd_judge->ecd_zero_set > 8191)
-//	{
-//		Rudder_ecd_judge->ecd_set = Rudder_ecd_judge->ecd_zero_set - 8191;
-//	}
-//	else if (Rudder_ecd_judge->ecd_zero_set < 0)
-//	{
-//		Rudder_ecd_judge->ecd_set = Rudder_ecd_judge->ecd_zero_set + 8191;
-//	}
-//}
-
-/**
- * @brief          舵电机跟随云台零点处理
- * @author         LYH
- * @param[in]      Rudder_ecd_set
- * @retval         none
- */
-//static void Rudder_motor_zero_ecd_set(chassis_move_t *Rudder_ecd_set)
-//{
-//	fp32 err = 0.0f;
-
-//	err = -1.0f * (chassis_move.gimbal_data.relative_angle_receive - chassis_move.chassis_relative_last);
-
-//	Rudder_ecd_set->Forward_L.ecd_zero_set = (Rudder_ecd_set->Forward_L.ecd_zero_set + err);
-//	Rudder_ecd_set->Back_L.ecd_zero_set = (Rudder_ecd_set->Back_L.ecd_zero_set + err);
-//	Rudder_ecd_set->Back_R.ecd_zero_set = (Rudder_ecd_set->Back_R.ecd_zero_set + err);
-//	Rudder_ecd_set->Forward_R.ecd_zero_set = (Rudder_ecd_set->Forward_R.ecd_zero_set + err);
-
-//	chassis_move.chassis_relative_last = chassis_move.gimbal_data.relative_angle_receive;
-
-//	// 零点处理
-//	Rudder_motor_ecd_judge(&Rudder_ecd_set->Forward_L);
-//	Rudder_motor_ecd_judge(&Rudder_ecd_set->Back_L);
-//	Rudder_motor_ecd_judge(&Rudder_ecd_set->Back_R);
-//	Rudder_motor_ecd_judge(&Rudder_ecd_set->Forward_R);
-//}
 
 /**
  * @brief          舵电机控制量设置
