@@ -124,6 +124,7 @@ void shoot_task(void const *pvParameters)
 		}
 		else
 			CAN_cmd_shoot(fric_move.fric_CAN_Set_Current[0], fric_move.fric_CAN_Set_Current[1], trigger_motor.given_current, 0);
+		CAN_cmd_shoot(10000, 10000, 10000, 0);
 		vTaskDelay(1);
 	}
 }

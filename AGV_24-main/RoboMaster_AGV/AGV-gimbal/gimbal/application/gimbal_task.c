@@ -185,13 +185,13 @@ void gimbal_task(void const *pvParameters)
         // gimbal init
         // 云台初始化
         gimbal_init(&gimbal_control);
-//        //判断电机是否都上线
-//       while (toe_is_error(YAW_GIMBAL_MOTOR_TOE) || toe_is_error(PITCH_GIMBAL_MOTOR_TOE))
-//       {
-//           // 等待电机上线，防止电机不工作
-//           vTaskDelay(GIMBAL_CONTROL_TIME);
-//           gimbal_feedback_update(&gimbal_control); // 云台数据反馈
-//       }
+        //判断电机是否都上线
+       while (toe_is_error(YAW_GIMBAL_MOTOR_TOE) || toe_is_error(PITCH_GIMBAL_MOTOR_TOE))
+       {
+           // 等待电机上线，防止电机不工作
+           vTaskDelay(GIMBAL_CONTROL_TIME);
+           gimbal_feedback_update(&gimbal_control); // 云台数据反馈
+       }
         while (1)
         {
             gimbal_set_mode(&gimbal_control);                    // 设置云台控制模式
