@@ -1,4 +1,0 @@
-#ifndef RUDDER_BEHAVIOUR_H
-#define RUDDER_BEHAVIOUR_H
-
-#endif
