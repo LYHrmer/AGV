@@ -82,12 +82,12 @@ void CAN_Motor_Call_Back(Struct_CAN_Rx_Buffer *Rx_Buffer)
         //     motor_6020.CAN_RxCpltCallback(Rx_Buffer->Data);
         // }
         // break;
-        case (0x11):
-        {
-			Motor_DM_Normal_CAN_RxCpltCallback(&motor_j8009,Rx_Buffer->Data);
-			break;
-        }
-		case (0x12):
+//        case (0x11):
+//        {
+//			Motor_DM_Normal_CAN_RxCpltCallback(&motor_j8009,Rx_Buffer->Data);
+//			break;
+//        }
+		case (0x11):
         {
             Motor_DM_Normal_CAN_RxCpltCallback(&motor_j4310,Rx_Buffer->Data);
 			break;
@@ -131,8 +131,8 @@ int main(void)
 	Motor_DM_Control_Method = Motor_DM_Control_Method_NORMAL_MIT;
     //can_filter_init();
 	CAN_Init(&hcan1, CAN_Motor_Call_Back);
-	Motor_DM_Normal_Init(&motor_j4310,&hcan1,0x12,0x02,Motor_DM_Control_Method_NORMAL_MIT,12.5f,25.0f,10.0f,10.261194f);
-	Motor_DM_Normal_Init(&motor_j8009,&hcan1,0x11,0x01,Motor_DM_Control_Method_NORMAL_MIT,12.5f,45.0f,54.0f,41.044777f);
+	Motor_DM_Normal_Init(&motor_j4310,&hcan1,0x11,0x01,Motor_DM_Control_Method_NORMAL_MIT,12.5f,25.0f,10.0f,10.261194f);
+//	Motor_DM_Normal_Init(&motor_j8009,&hcan1,0x11,0x01,Motor_DM_Control_Method_NORMAL_MIT,12.5f,45.0f,54.0f,41.044777f);
 //	HAL_Delay(1500);
 	
 //	motor_j4310.Control_Angle = 0.0f;
@@ -149,21 +149,21 @@ int main(void)
 	  
 	  
 //	  Motor_DM_Normal_CAN_Send_Disable(&motor_j4310);
-//	  
-//	  Counter = Counter + PI/2;
-//	  if(Counter > 2*PI)
-//	  {
-//		  Counter = 0;
-//	  }
 	  
-//	  Counter++;
+	  Counter = Counter + PI/2;
+	  if(Counter > 2*PI)
+	  {
+		  Counter = 0;
+	  }
+	  
+	  Counter++;
 //	  motor_j4310.Control_Angle = ((Counter / 3000) % 2 == 0 ? 0.0f : PI);
-////	  motor_j4310.Control_Angle = (Counter);
-//	  motor_j4310.Control_Omega = 0.0f;
-//	  motor_j4310.Control_Current = 0.0f;
-//	  motor_j4310.K_P = 40.0f;
-//	  motor_j4310.K_D = 1.0f;
-//	  Motor_DM_Normal_TIM_Send_PeriodElapsedCallback(&motor_j4310);
+	  motor_j4310.Control_Angle = (Counter);
+	  motor_j4310.Control_Omega = 0.0f;
+	  motor_j4310.Control_Current = 0.0f;
+	  motor_j4310.K_P = 40.0f;
+	  motor_j4310.K_D = 1.0f;
+	  Motor_DM_Normal_TIM_Send_PeriodElapsedCallback(&motor_j4310);
 //	  
 //	  // ±£³Ö´æ»î
 //      static uint32_t Counter_KeepAlive = 0;

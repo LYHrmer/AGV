@@ -81,98 +81,239 @@ static CAN_TxHeaderTypeDef gimbal_callx_message;
 static uint8_t gimbal_can_call_data[8];
 
 /**
+ * @brief 配置CAN的过滤器
+ *
+ * @param hcan CAN编号
+ * @param Object_Para 编号 | FIFOx | ID类型 | 帧类型
+ * @param ID ID
+ * @param Mask_ID 屏蔽位(0x3ff, 0x1fffffff)
+ */
+void CAN_Filter_Mask_Config(CAN_HandleTypeDef *hcan, uint8_t Object_Para, uint32_t ID, uint32_t Mask_ID)
+{
+    CAN_FilterTypeDef can_filter_init_structure;
+
+    //检测传参是否正确
+    assert_param(hcan != NULL);
+
+    if ((Object_Para & 0x02))
+    {
+        //数据帧
+        //掩码后ID的高16bit
+        can_filter_init_structure.FilterIdHigh = ID << 3 << 16;
+        //掩码后ID的低16bit
+        can_filter_init_structure.FilterIdLow = ID << 3 | ((Object_Para & 0x03) << 1);
+        // ID掩码值高16bit
+        can_filter_init_structure.FilterMaskIdHigh = Mask_ID << 3 << 16;
+        // ID掩码值低16bit
+        can_filter_init_structure.FilterMaskIdLow = Mask_ID << 3 | ((Object_Para & 0x03) << 1);
+    }
+    else
+    {
+        //其他帧
+        //掩码后ID的高16bit
+        can_filter_init_structure.FilterIdHigh = ID << 5;
+        //掩码后ID的低16bit
+        can_filter_init_structure.FilterIdLow = ((Object_Para & 0x03) << 1);
+        // ID掩码值高16bit
+        can_filter_init_structure.FilterMaskIdHigh = Mask_ID << 5;
+        // ID掩码值低16bit
+        can_filter_init_structure.FilterMaskIdLow = ((Object_Para & 0x03) << 1);
+    }
+    //滤波器序号, 0-27, 共28个滤波器, 前14个在CAN1, 后14个在CAN2
+    can_filter_init_structure.FilterBank = Object_Para >> 3;
+    //滤波器绑定FIFO0
+    can_filter_init_structure.FilterFIFOAssignment = (Object_Para >> 2) & 0x01;
+    //使能滤波器
+    can_filter_init_structure.FilterActivation = ENABLE;
+    //滤波器模式，设置ID掩码模式
+    can_filter_init_structure.FilterMode = CAN_FILTERMODE_IDMASK;
+    // 32位滤波
+    can_filter_init_structure.FilterScale = CAN_FILTERSCALE_32BIT;
+    //从机模式选择开始单元
+    can_filter_init_structure.SlaveStartFilterBank = 14;
+
+    HAL_CAN_ConfigFilter(hcan, &can_filter_init_structure);
+}
+	
+/**
+ * @brief 初始化CAN总线
+ *
+ * @param hcan CAN编号
+ * @param Callback_Function 处理回调函数
+ */
+void CAN_Init(CAN_HandleTypeDef *hcan, CAN_Call_Back Callback_Function)
+{
+    HAL_CAN_Start(hcan);
+    __HAL_CAN_ENABLE_IT(hcan, CAN_IT_RX_FIFO0_MSG_PENDING);
+    __HAL_CAN_ENABLE_IT(hcan, CAN_IT_RX_FIFO1_MSG_PENDING);
+
+    if (hcan->Instance == CAN1)
+    {
+        CAN1_Manage_Object.CAN_Handler = hcan;
+        CAN1_Manage_Object.Callback_Function = Callback_Function;
+        CAN_Filter_Mask_Config(hcan, CAN_FILTER(0) | CAN_FIFO_0 | CAN_STDID | CAN_DATA_TYPE, 0, 0);
+        CAN_Filter_Mask_Config(hcan, CAN_FILTER(1) | CAN_FIFO_1 | CAN_STDID | CAN_DATA_TYPE, 0, 0);
+    }
+    else if (hcan->Instance == CAN2)
+    {
+        CAN2_Manage_Object.CAN_Handler = hcan;
+        CAN2_Manage_Object.Callback_Function = Callback_Function;
+        CAN_Filter_Mask_Config(hcan, CAN_FILTER(14) | CAN_FIFO_0 | CAN_STDID | CAN_DATA_TYPE, 0, 0);
+        CAN_Filter_Mask_Config(hcan, CAN_FILTER(15) | CAN_FIFO_1 | CAN_STDID | CAN_DATA_TYPE, 0, 0);
+    }
+}
+
+/**
+  * @brief          hal CAN fifo call back, receive motor data
+  * @param[in]      hcan, the point to CAN handle
+  * @retval         none
+  */
+/**
+  * @brief          hal库CAN回调函数,接收电机数据
+  * @param[in]      hcan:CAN句柄指针
+  * @retval         none
+  */
+
+
+/**
+ * @brief HAL库CAN接收FIFO0中断
+ *
+ * @param hcan CAN编号
+ */
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
+{
+    //选择回调函数
+    if (hcan->Instance == CAN1)
+    {
+        HAL_CAN_GetRxMessage(hcan, CAN_FILTER_FIFO0, &CAN1_Manage_Object.Rx_Buffer.Header, CAN1_Manage_Object.Rx_Buffer.Data);
+        CAN1_Manage_Object.Callback_Function(&CAN1_Manage_Object.Rx_Buffer);
+    }
+    else if (hcan->Instance == CAN2)
+    {
+        HAL_CAN_GetRxMessage(hcan, CAN_FILTER_FIFO0, &CAN2_Manage_Object.Rx_Buffer.Header, CAN2_Manage_Object.Rx_Buffer.Data);
+        CAN2_Manage_Object.Callback_Function(&CAN2_Manage_Object.Rx_Buffer);
+    }
+}
+
+/**
+ * @brief HAL库CAN接收FIFO1中断
+ *
+ * @param hcan CAN编号
+ */
+void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan)
+{
+    //选择回调函数
+    if (hcan->Instance == CAN1)
+    {
+        HAL_CAN_GetRxMessage(hcan, CAN_FILTER_FIFO1, &CAN1_Manage_Object.Rx_Buffer.Header, CAN1_Manage_Object.Rx_Buffer.Data);
+        CAN1_Manage_Object.Callback_Function(&CAN1_Manage_Object.Rx_Buffer);
+    }
+    else if (hcan->Instance == CAN2)
+    {
+        HAL_CAN_GetRxMessage(hcan, CAN_FILTER_FIFO1, &CAN2_Manage_Object.Rx_Buffer.Header, CAN2_Manage_Object.Rx_Buffer.Data);
+        CAN2_Manage_Object.Callback_Function(&CAN2_Manage_Object.Rx_Buffer);
+    }
+}
+/**
  * @brief          hal CAN fifo call back, receive motor data
  * @param[in]      hcan, the point to CAN handle
  * @retval         none
  */
 /**
- * @brief          hal库CAN回调函数,接收电机数据
- * @param[in]      hcan:CAN句柄指针
- * @retval         none
- */
-void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
-{
-  CAN_RxHeaderTypeDef rx_header;
-  uint8_t rx_data[8];
-
-  HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data);
-
-  if (hcan == &hcan1)
-  {
-    switch (rx_header.StdId)
-    {
-    case CAN_YAW_MOTOR_ID:
-    {
-
-      get_motor_measure(&motor_chassis[4], rx_data);
-      detect_hook(YAW_GIMBAL_MOTOR_TOE);
-      break;
-    }
-    case CAN_PIT_MOTOR_ID:
-    {
-      get_motor_measure(&motor_chassis[5], rx_data);
-      detect_hook(PITCH_GIMBAL_MOTOR_TOE);
-      break;
-    }
-    case cap_voltage_ID:
-    {
-      Cap_Voltage =(((int32_t)(rx_data[0]) << 8) | (int32_t)(rx_data[1]));   //超电输入电压
-			cur_output = (((int32_t)(rx_data[2]) << 8) | (int32_t)(rx_data[3]));   //
-    }
-		case (0x12):
-    {
-      Motor_DM_Normal_CAN_RxCpltCallback(&gimbal_control.DM_j4310.motor_j4310,CAN1_Manage_Object.Rx_Buffer.Data);
-			break;
-     }
-    default:
-    {
-      break;
-    }
-    }
-  }
-  else if (hcan == &hcan2)
-  {
-    switch (rx_header.StdId)
-    {
-    case CAN_TRIGGER_MOTOR_ID:
-    {
-      get_motor_measure(&motor_tri, rx_data);
-      detect_hook(TRIGGER_MOTOR_TOE);
-      break;
-    }
-    case CAN_3508_S1_ID:
-    {
-      get_motor_measure(&motor_shoot[rx_header.StdId - CAN_3508_S1_ID], rx_data);
-      detect_hook(FRIC_LEFT_MOTOR_TOE);
-      break;
-    }
-    case CAN_3508_S2_ID:
-    {
-      get_motor_measure(&motor_shoot[rx_header.StdId - CAN_3508_S1_ID], rx_data);
-      detect_hook(FRIC_RIGHT_MOTOR_TOE);
-      break;
-    }
-    default:
-    {
-      break;
-    }
-    }
-  }
-}
-
-//void CAN_Motor_Call_Back(Struct_CAN_Rx_Buffer *Rx_Buffer)
+// * @brief          hal库CAN回调函数,接收电机数据
+// * @param[in]      hcan:CAN句柄指针
+// * @retval         none
+// */
+//void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 //{
-//    switch (Rx_Buffer->Header.StdId)
+//  CAN_RxHeaderTypeDef rx_header;
+//  uint8_t rx_data[8];
+
+//  HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data);
+//	HAL_CAN_GetRxMessage(hcan, CAN_FILTER_FIFO0, &rx_header, rx_data);
+//  HAL_CAN_GetRxMessage(hcan, CAN_FILTER_FIFO1, &rx_header, rx_data);
+//	
+//  if (hcan == &hcan1)
+//  {
+//    switch (rx_header.StdId)
 //    {
-//			
-//		case (0x12):
-//        {
-//            Motor_DM_Normal_CAN_RxCpltCallback(&motor_j4310,Rx_Buffer->Data);
+//		 case (0x11):
+//    {
+//			for(int i=0;i<8;i++)
+//			{
+//			CAN1_Manage_Object.Rx_Buffer.Data[i] = rx_data[i];
+//			}
+//      Motor_DM_Normal_CAN_RxCpltCallback(&gimbal_control.DM_j4310.motor_j4310,CAN1_Manage_Object.Rx_Buffer.Data);
+//			Motor_DM_Normal_CAN_RxCpltCallback(&gimbal_control.DM_j4310.motor_j4310,rx_data);
 //			break;
-//        }
-//				
+//     }
+//    case CAN_YAW_MOTOR_ID:
+//    {
+
+//      get_motor_measure(&motor_chassis[4], rx_data);
+//      detect_hook(YAW_GIMBAL_MOTOR_TOE);
+//      break;
 //    }
+//    case CAN_PIT_MOTOR_ID:
+//    {
+//      get_motor_measure(&motor_chassis[5], rx_data);
+//      detect_hook(PITCH_GIMBAL_MOTOR_TOE);
+//      break;
+//    }
+//    case cap_voltage_ID:
+//    {
+//      Cap_Voltage =(((int32_t)(rx_data[0]) << 8) | (int32_t)(rx_data[1]));   //超电输入电压
+//			cur_output = (((int32_t)(rx_data[2]) << 8) | (int32_t)(rx_data[3]));   //
+//    }
+//    default:
+//    {
+//      break;
+//    }
+//    }
+//  }
+//  else if (hcan == &hcan2)
+//  {
+//    switch (rx_header.StdId)
+//    {
+//    case CAN_TRIGGER_MOTOR_ID:
+//    {
+//      get_motor_measure(&motor_tri, rx_data);
+//      detect_hook(TRIGGER_MOTOR_TOE);
+//      break;
+//    }
+//    case CAN_3508_S1_ID:
+//    {
+//      get_motor_measure(&motor_shoot[rx_header.StdId - CAN_3508_S1_ID], rx_data);
+//      detect_hook(FRIC_LEFT_MOTOR_TOE);
+//      break;
+//    }
+//    case CAN_3508_S2_ID:
+//    {
+//      get_motor_measure(&motor_shoot[rx_header.StdId - CAN_3508_S1_ID], rx_data);
+//      detect_hook(FRIC_RIGHT_MOTOR_TOE);
+//      break;
+//    }
+//    default:
+//    {
+//      break;
+//    }
+//    }
+//  }
 //}
+
+void CAN_Motor_Call_Back(Struct_CAN_Rx_Buffer *Rx_Buffer)
+{
+    switch (Rx_Buffer->Header.StdId)
+    {
+			
+		case (0x11):
+        {
+            Motor_DM_Normal_CAN_RxCpltCallback(&gimbal_control.DM_j4310.motor_j4310,Rx_Buffer->Data);
+			break;
+        }
+				
+    }
+}
 
 void CAN_cmd_shoot(int16_t fric1, int16_t fric2, int16_t shoot, int16_t rev)
 {
@@ -255,62 +396,6 @@ void CAN_cmd_chassis_reset_ID(void)
   HAL_CAN_AddTxMessage(&CHASSIS_CAN, &chassis_tx_message, chassis_can_send_data, &send_mail_box);
 }
 
-
-
-/**
- * @brief 配置CAN的过滤器
- *
- * @param hcan CAN编号
- * @param Object_Para 编号 | FIFOx | ID类型 | 帧类型
- * @param ID ID
- * @param Mask_ID 屏蔽位(0x3ff, 0x1fffffff)
- */
-void CAN_Filter_Mask_Config(CAN_HandleTypeDef *hcan, uint8_t Object_Para, uint32_t ID, uint32_t Mask_ID)
-{
-    CAN_FilterTypeDef can_filter_init_structure;
-
-    //检测传参是否正确
-    assert_param(hcan != NULL);
-
-    if ((Object_Para & 0x02))
-    {
-        //数据帧
-        //掩码后ID的高16bit
-        can_filter_init_structure.FilterIdHigh = ID << 3 << 16;
-        //掩码后ID的低16bit
-        can_filter_init_structure.FilterIdLow = ID << 3 | ((Object_Para & 0x03) << 1);
-        // ID掩码值高16bit
-        can_filter_init_structure.FilterMaskIdHigh = Mask_ID << 3 << 16;
-        // ID掩码值低16bit
-        can_filter_init_structure.FilterMaskIdLow = Mask_ID << 3 | ((Object_Para & 0x03) << 1);
-    }
-    else
-    {
-        //其他帧
-        //掩码后ID的高16bit
-        can_filter_init_structure.FilterIdHigh = ID << 5;
-        //掩码后ID的低16bit
-        can_filter_init_structure.FilterIdLow = ((Object_Para & 0x03) << 1);
-        // ID掩码值高16bit
-        can_filter_init_structure.FilterMaskIdHigh = Mask_ID << 5;
-        // ID掩码值低16bit
-        can_filter_init_structure.FilterMaskIdLow = ((Object_Para & 0x03) << 1);
-    }
-    //滤波器序号, 0-27, 共28个滤波器, 前14个在CAN1, 后14个在CAN2
-    can_filter_init_structure.FilterBank = Object_Para >> 3;
-    //滤波器绑定FIFO0
-    can_filter_init_structure.FilterFIFOAssignment = (Object_Para >> 2) & 0x01;
-    //使能滤波器
-    can_filter_init_structure.FilterActivation = ENABLE;
-    //滤波器模式，设置ID掩码模式
-    can_filter_init_structure.FilterMode = CAN_FILTERMODE_IDMASK;
-    // 32位滤波
-    can_filter_init_structure.FilterScale = CAN_FILTERSCALE_32BIT;
-    //从机模式选择开始单元
-    can_filter_init_structure.SlaveStartFilterBank = 14;
-
-    HAL_CAN_ConfigFilter(hcan, &can_filter_init_structure);
-}
 	
 uint8_t CAN_Send_Data(CAN_HandleTypeDef *hcan, uint16_t ID, uint8_t *Data, uint16_t Length)
 {

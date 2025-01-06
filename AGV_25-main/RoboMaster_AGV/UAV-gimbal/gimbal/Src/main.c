@@ -40,7 +40,7 @@
 #include "bsp_delay.h"
 #include "bsp_usart.h"
 #include "remote_control.h"
-
+#include "CAN_receive.h"
 #include "chassis_task.h"
 #include "detect_task.h"
 #include "gimbal_task.h"
@@ -139,6 +139,7 @@ int main(void)
     MX_USART6_UART_Init();
     /* USER CODE BEGIN 2 */
     MX_USB_DEVICE_Init();
+		CAN_Init(&hcan1, CAN_Motor_Call_Back);
     can_filter_init();
     delay_init();
     remote_control_init();

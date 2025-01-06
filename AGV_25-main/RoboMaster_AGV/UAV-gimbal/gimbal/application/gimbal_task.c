@@ -51,7 +51,9 @@
         else if ((ecd) < 0)     \
             (ecd) += ECD_RANGE; \
     }
-
+		
+uint32_t Counter = 0;
+		
 #if INCLUDE_uxTaskGetStackHighWaterMark
 uint32_t gimbal_high_water;
 #endif
@@ -179,44 +181,62 @@ void gimbal_task(void const *pvParameters)
 {
     // 等待陀螺仪任务更新陀螺仪数据
     // wait a time
-    vTaskDelay(GIMBAL_TASK_INIT_TIME);
-    if (can_comm_task_init_finish())
-    {
+//    vTaskDelay(GIMBAL_TASK_INIT_TIME);
+//    if (can_comm_task_init_finish())
+//    {
         // gimbal init
         // 云台初始化
-        gimbal_init(&gimbal_control);
+//        gimbal_init(&gimbal_control);
         //判断电机是否都上线
-       while (toe_is_error(YAW_GIMBAL_MOTOR_TOE) || toe_is_error(PITCH_GIMBAL_MOTOR_TOE))
-       {
-           // 等待电机上线，防止电机不工作
-           vTaskDelay(GIMBAL_CONTROL_TIME);
-           gimbal_feedback_update(&gimbal_control); // 云台数据反馈
-       }
+//       while (toe_is_error(YAW_GIMBAL_MOTOR_TOE) || toe_is_error(PITCH_GIMBAL_MOTOR_TOE))
+//       {
+//           // 等待电机上线，防止电机不工作
+//           vTaskDelay(GIMBAL_CONTROL_TIME);
+//           gimbal_feedback_update(&gimbal_control); // 云台数据反馈
+//       }
+						Motor_DM_Normal_CAN_Send_Enable(&gimbal_control.DM_j4310.motor_j4310);   //使能
+				gimbal_control.DM_j4310.Motor_DM_Control_Method = Motor_DM_Control_Method_NORMAL_MIT;
+			Motor_DM_Normal_Init(&gimbal_control.DM_j4310.motor_j4310,&hcan1,0x11,0x01,Motor_DM_Control_Method_NORMAL_MIT,12.5f,25.0f,10.0f,10.261194f);
         while (1)
         {
-            gimbal_set_mode(&gimbal_control);                    // 设置云台控制模式
-            gimbal_mode_change_control_transit(&gimbal_control); // 控制模式切换 控制数据过渡
-            gimbal_feedback_update(&gimbal_control);             // 云台数据反馈
-            gimbal_set_control(&gimbal_control);                 // 设置云台控制量
-            gimbal_control_loop(&gimbal_control);                // 云台控制计算
+//					Motor_DM_Normal_CAN_Send_Enable(&gimbal_control.DM_j4310.motor_j4310);   //使能
+//						  Motor_DM_Normal_CAN_Send_Disable(&gimbal_control.DM_j4310.motor_j4310); //失能
+	  
+	  Counter = Counter + PI/2;
+	  if(Counter > 2*PI)
+	  {
+		  Counter = 0;
+	  }  
 
-                if (toe_is_error(DBUS_TOE))
-                    // 判断遥控器是否掉线
-                    CAN_cmd_gimbal(0, 0);
-                else
-                {
-									if(gimbal_control.gimbal_rc_ctrl->rc.s[1] == 2)
-										CAN_cmd_gimbal(0, 0);
-									else
-										CAN_cmd_gimbal(gimbal_control.gimbal_yaw_motor.given_current, -gimbal_control.gimbal_pitch_motor.given_current);
-            }
+	  gimbal_control.DM_j4310.motor_j4310.Control_Angle = (1);
+	  gimbal_control.DM_j4310.motor_j4310.Control_Omega = 0.0f;
+	  gimbal_control.DM_j4310.motor_j4310.Control_Current = 0.0f;
+	  gimbal_control.DM_j4310.motor_j4310.K_P = 40.0f;
+	  gimbal_control.DM_j4310.motor_j4310.K_D = 1.0f;
+	  Motor_DM_Normal_TIM_Send_PeriodElapsedCallback(&gimbal_control.DM_j4310.motor_j4310);
+//            gimbal_set_mode(&gimbal_control);                    // 设置云台控制模式
+//            gimbal_mode_change_control_transit(&gimbal_control); // 控制模式切换 控制数据过渡
+//            gimbal_feedback_update(&gimbal_control);             // 云台数据反馈
+//            gimbal_set_control(&gimbal_control);                 // 设置云台控制量
+//            gimbal_control_loop(&gimbal_control);                // 云台控制计算
 
-            vTaskDelay(GIMBAL_CONTROL_TIME);
-#if INCLUDE_uxTaskGetStackHighWaterMark
-            gimbal_high_water = uxTaskGetStackHighWaterMark(NULL);
-#endif
+//                if (toe_is_error(DBUS_TOE))
+//                    // 判断遥控器是否掉线
+//                    CAN_cmd_gimbal(0, 0);
+//                else
+//                {
+//									if(gimbal_control.gimbal_rc_ctrl->rc.s[1] == 2)
+//										CAN_cmd_gimbal(0, 0);
+//									else
+//										CAN_cmd_gimbal(gimbal_control.gimbal_yaw_motor.given_current, -gimbal_control.gimbal_pitch_motor.given_current);
+//            }
+
+            vTaskDelay(1);
+//#if INCLUDE_uxTaskGetStackHighWaterMark
+//            gimbal_high_water = uxTaskGetStackHighWaterMark(NULL);
+//#endif
         }
-    }
+//    }
 }
 
 /**
