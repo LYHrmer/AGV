@@ -318,6 +318,7 @@ typedef struct
 	int zero_ecd_flag;
 	int last_zero_ecd;
 	Motor_DM_Normal motor_j4310; //´ïß÷4310
+	Enum_Motor_DM_Control_Method Motor_DM_Control_Method;
 } gimbal_motor_t;
 
 typedef struct
@@ -339,6 +340,7 @@ typedef struct
     const INS_t* gimbal_INS_point;
     gimbal_motor_t gimbal_yaw_motor;
     gimbal_motor_t gimbal_pitch_motor;
+	  gimbal_motor_t DM_j4310;
 
 	fp32 right_click_time;
 	
@@ -365,7 +367,7 @@ extern const gimbal_motor_t *get_pitch_motor_point(void);
   * @param[in]      pvParameters: ¿Õ
   * @retval         none
   */
-
+extern gimbal_control_t gimbal_control;
 
 fp32 get_yaw_positive_direction(void);
 

@@ -24,6 +24,8 @@
 #include "bsp_rng.h"
 #include "detect_task.h"
 #include "can.h"
+#include "motor_dm.h"
+#include "gimbal_task.h"
 
 extern CAN_HandleTypeDef hcan1;
 extern CAN_HandleTypeDef hcan2;
@@ -66,6 +68,7 @@ uint8_t CAN2_0x4fe_Tx_Data[8];
 static motor_measure_t motor_chassis[7];
 static motor_measure_t motor_shoot[2];
 static motor_measure_t motor_tri;
+
 
 static CAN_TxHeaderTypeDef gimbal_tx_message;
 static uint8_t gimbal_can_send_data[8];
@@ -116,6 +119,11 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
       Cap_Voltage =(((int32_t)(rx_data[0]) << 8) | (int32_t)(rx_data[1]));   //³¬µçÊäÈëµçÑ¹
 			cur_output = (((int32_t)(rx_data[2]) << 8) | (int32_t)(rx_data[3]));   //
     }
+		case (0x12):
+    {
+      Motor_DM_Normal_CAN_RxCpltCallback(&gimbal_control.DM_j4310.motor_j4310,CAN1_Manage_Object.Rx_Buffer.Data);
+			break;
+     }
     default:
     {
       break;
@@ -152,23 +160,19 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
   }
 }
 
-// void CAN_cmd_shoot(int16_t fric1,int16_t fric2 ,int16_t shoot)
+//void CAN_Motor_Call_Back(Struct_CAN_Rx_Buffer *Rx_Buffer)
 //{
-//    uint32_t send_mail_box;
-//    shoot_tx_message.StdId = CAN_SHOOT_ALL_ID;
-//    shoot_tx_message.IDE = CAN_ID_STD;
-//    shoot_tx_message.RTR = CAN_RTR_DATA;
-//    shoot_tx_message.DLC = 0x08;
-//    shoot_can_send_data[0] = (fric1 >> 8);
-//    shoot_can_send_data[1] = fric1;
-//    shoot_can_send_data[2] = (fric2 >> 8);
-//    shoot_can_send_data[3] = fric2;
-//    shoot_can_send_data[4] = (shoot >> 8);
-//    shoot_can_send_data[5] = shoot;
-//    shoot_can_send_data[6] = (0 >> 8);
-//    shoot_can_send_data[7] = 0;
-//    HAL_CAN_AddTxMessage(&hcan2, &shoot_tx_message, shoot_can_send_data, &send_mail_box);
-// }
+//    switch (Rx_Buffer->Header.StdId)
+//    {
+//			
+//		case (0x12):
+//        {
+//            Motor_DM_Normal_CAN_RxCpltCallback(&motor_j4310,Rx_Buffer->Data);
+//			break;
+//        }
+//				
+//    }
+//}
 
 void CAN_cmd_shoot(int16_t fric1, int16_t fric2, int16_t shoot, int16_t rev)
 {
