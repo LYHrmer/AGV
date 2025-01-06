@@ -202,18 +202,13 @@ void gimbal_task(void const *pvParameters)
 //					Motor_DM_Normal_CAN_Send_Enable(&gimbal_control.DM_j4310.motor_j4310);   //使能
 //						  Motor_DM_Normal_CAN_Send_Disable(&gimbal_control.DM_j4310.motor_j4310); //失能
 	  
-	  Counter = Counter + PI/2;
-	  if(Counter > 2*PI)
-	  {
-		  Counter = 0;
-	  }  
-
-	  gimbal_control.DM_j4310.motor_j4310.Control_Angle = (1);
+	  gimbal_control.DM_j4310.motor_j4310.Control_Angle = 0;
 	  gimbal_control.DM_j4310.motor_j4310.Control_Omega = 0.0f;
 	  gimbal_control.DM_j4310.motor_j4310.Control_Current = 0.0f;
 	  gimbal_control.DM_j4310.motor_j4310.K_P = 40.0f;
 	  gimbal_control.DM_j4310.motor_j4310.K_D = 1.0f;
 	  Motor_DM_Normal_TIM_Send_PeriodElapsedCallback(&gimbal_control.DM_j4310.motor_j4310);
+		CAN_cmd_gimbal(1000, 0);
 //            gimbal_set_mode(&gimbal_control);                    // 设置云台控制模式
 //            gimbal_mode_change_control_transit(&gimbal_control); // 控制模式切换 控制数据过渡
 //            gimbal_feedback_update(&gimbal_control);             // 云台数据反馈
