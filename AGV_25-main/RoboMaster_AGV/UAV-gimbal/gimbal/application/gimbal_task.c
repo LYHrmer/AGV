@@ -227,7 +227,8 @@ const gimbal_motor_t *get_yaw_motor_point(void)
  */
 const gimbal_motor_t *get_pitch_motor_point(void)
 {
-    return &gimbal_control.gimbal_pitch_motor;
+//    return &gimbal_control.gimbal_pitch_motor;DM_j4310
+	  return &gimbal_control.DM_j4310;
 }
 
 /**
@@ -237,7 +238,8 @@ const gimbal_motor_t *get_pitch_motor_point(void)
  */
 static void gimbal_init(gimbal_control_t *init)
 {
-
+		const static fp32 pitch_increment_error_pid[3] = {1.0, 0.0, 0.1}; //内置PID自稳云台
+		
     const static fp32 gimbal_yaw_auto_scan_order_filter[1] = {GIMBAL_YAW_AUTO_SCAN_NUM};
     const static fp32 gimbal_pitch_auto_scan_order_filter[1] = {GIMBAL_PITCH_AUTO_SCAN_NUM};
 		
@@ -249,22 +251,22 @@ static void gimbal_init(gimbal_control_t *init)
     gimbal_control.gimbal_yaw_motor.frist_ecd = GIMBAL_YAW_OFFSET_ENCODE;
     // 电机数据指针获取
     init->gimbal_yaw_motor.gimbal_motor_measure = get_yaw_gimbal_motor_measure_point();
-    init->gimbal_pitch_motor.gimbal_motor_measure = get_pitch_gimbal_motor_measure_point();
+//    init->gimbal_pitch_motor.gimbal_motor_measure = get_pitch_gimbal_motor_measure_point();
     // 陀螺仪数据指针获取
     init->gimbal_INS_point = get_INS_point();
     // 遥控器数据指针获取
     init->gimbal_rc_ctrl = get_remote_control_point();
-    // 获取上位机视觉数据指针
-    init->gimbal_vision_point = get_vision_gimbal_point();
-    // 获取自动移动结构体
-    init->auto_move_point = get_auto_move_point();
+//    // 获取上位机视觉数据指针
+//    init->gimbal_vision_point = get_vision_gimbal_point();
+//    // 获取自动移动结构体
+//    init->auto_move_point = get_auto_move_point();
     // 初始化电机模式
     init->gimbal_yaw_motor.gimbal_motor_mode = init->gimbal_yaw_motor.last_gimbal_motor_mode = GIMBAL_MOTOR_RAW;
-    init->gimbal_pitch_motor.gimbal_motor_mode = init->gimbal_pitch_motor.last_gimbal_motor_mode = GIMBAL_MOTOR_RAW;
+    init->DM_j4310.gimbal_motor_mode = init->DM_j4310.last_gimbal_motor_mode = GIMBAL_MOTOR_RAW;
 
     //初始化云台电机二阶控制器
     gimbal_motor_second_order_linear_controller_init(&init->gimbal_yaw_motor.gimbal_motor_second_order_linear_controller, YAW_FEED_FORWARD, K_YAW_ANGLE_ERROR, K_YAW_ANGLE_SPEED, YAW_MAX_OUT, YAW_MIX_OUT);
-    gimbal_motor_second_order_linear_controller_init(&init->gimbal_pitch_motor.gimbal_motor_second_order_linear_controller, PITCH_FEED_FORWARD, K_PITCH_ANGLE_ERROR, K_PITCH_ANGLE_SPEED, PITCH_MAX_OUT, PITCH_MIX_OUT);
+    gimbal_motor_second_order_linear_controller_init(&init->DM_j4310.gimbal_motor_second_order_linear_controller, PITCH_FEED_FORWARD, K_PITCH_ANGLE_ERROR, K_PITCH_ANGLE_SPEED, PITCH_MAX_OUT, PITCH_MIX_OUT);
 
     // 云台数据更新     
     gimbal_feedback_update(init);
@@ -272,15 +274,15 @@ static void gimbal_init(gimbal_control_t *init)
 		//stm32pid初始化
 		 stm32_pid_init_pitch(); 
     
-    // yaw轴6020电机初始化
+    // yaw轴数据初始化
     init->gimbal_yaw_motor.absolute_angle_set = init->gimbal_yaw_motor.absolute_angle;
     init->gimbal_yaw_motor.relative_angle_set = init->gimbal_yaw_motor.relative_angle;
     init->gimbal_yaw_motor.motor_gyro_set = init->gimbal_yaw_motor.motor_gyro;
 		
-    // pitch轴6020电机初始化
-    init->gimbal_pitch_motor.absolute_angle_set = init->gimbal_pitch_motor.absolute_angle;
-    init->gimbal_pitch_motor.relative_angle_set = init->gimbal_pitch_motor.relative_angle;
-    init->gimbal_pitch_motor.motor_gyro_set = init->gimbal_pitch_motor.motor_gyro;
+    // pitch轴数据初始化
+    init->DM_j4310.absolute_angle_set = init->DM_j4310.absolute_angle;
+    init->DM_j4310.relative_angle_set = init->DM_j4310.relative_angle;
+    init->DM_j4310.motor_gyro_set = init->DM_j4310.motor_gyro;
 		
     //达妙电机初始化
 		Motor_DM_Normal_CAN_Send_Enable(&gimbal_control.DM_j4310.motor_j4310);   //达妙电机使能
@@ -301,7 +303,7 @@ static void gimbal_init(gimbal_control_t *init)
     //yaw轴云台初始化相对角度
     init->gimbal_yaw_motor.offset_ecd = GIMBAL_YAW_OFFSET_ENCODE;
     // pitch轴云台初始化相对角度
-    init->gimbal_pitch_motor.offset_ecd = GIMBAL_PITCH_OFFSET_ENCODE; 
+    init->DM_j4310.offset_ecd = GIMBAL_PITCH_OFFSET_ENCODE; 
 
     // 初始化云台自动扫描结构体的扫描范围
     init->gimbal_auto_scan.pitch_range = PITCH_SCAN_RANGE;
@@ -311,12 +313,18 @@ static void gimbal_init(gimbal_control_t *init)
     init->gimbal_auto_scan.scan_pitch_period = PITCH_SCAN_PERIOD;
     init->gimbal_auto_scan.scan_yaw_period = YAW_SCAN_PERIOD;
 
-
     // 设置pitch轴相对角最大值
-    init->gimbal_pitch_motor.max_relative_angle = -motor_ecd_to_angle_change(GIMBAL_PITCH_MAX_ENCODE, init->gimbal_pitch_motor.offset_ecd);
-    init->gimbal_pitch_motor.min_relative_angle = -motor_ecd_to_angle_change(GIMBAL_PITCH_MIN_ENCODE, init->gimbal_pitch_motor.offset_ecd);
-
-	vision_rx=get_vision_fifo();
+    init->DM_j4310.max_relative_angle = motor_ecd_to_angle_change(GIMBAL_PITCH_MAX_ENCODE, init->DM_j4310.offset_ecd);
+    init->DM_j4310.min_relative_angle = motor_ecd_to_angle_change(GIMBAL_PITCH_MIN_ENCODE, init->DM_j4310.offset_ecd);
+    init->DM_j4310.max_absolute_angle = PI/4;
+    init->DM_j4310.min_absolute_angle = -PI/4;
+		
+		//pitch轴绝对角度控制PID初始化
+    PID_UP_Init(&init->DM_j4310.Absloute_Angle_PID,PITCH_ABSLOUTE_ANGLE_PID_KP, PITCH_ABSLOUTE_ANGLE_PID_KI, PITCH_ABSLOUTE_ANGLE_PID_KD, 
+    PITCH_ABSLOUTE_ANGLE_PID_KF, PITCH_ABSLOUTE_ANGLE_PID_I_MAXOUT, PITCH_ABSLOUTE_ANGLE_PID_MAX_OUT, PID_D_T, PITCH_ABSLOUTE_ANGLE_PID_DEAD_ZONE,
+    PITCH_ABSLOUTE_ANGLE_I_Variable_Speed_A, PITCH_ABSLOUTE_ANGLE_I_Variable_Speed_B, PITCH_ABSLOUTE_ANGLE_I_Separate_Threshold, PID_D_First_ENABLE);
+   
+	 vision_rx=get_vision_fifo();
 	
 }
 
@@ -346,12 +354,9 @@ static void gimbal_feedback_update(gimbal_control_t *feedback_update)
         return;
     }
     // 云台数据更新
-    feedback_update->gimbal_pitch_motor.absolute_angle = feedback_update->gimbal_INS_point->Pitch;
-    feedback_update->gimbal_pitch_motor.relative_angle = -motor_ecd_to_angle_change(feedback_update->gimbal_pitch_motor.gimbal_motor_measure->ecd,
-                                                                                    feedback_update->gimbal_pitch_motor.offset_ecd);
-    feedback_update->gimbal_pitch_motor.motor_gyro = feedback_update->gimbal_INS_point->Gyro[0];
-//    feedback_update->gimbal_pitch_j4310.absolute_angle = feedback_update->gimbal_INS_point->Pitch;
-//    feedback_update->gimbal_pitch_j4310.motor_gyro = feedback_update->gimbal_INS_point->Gyro[0];
+    feedback_update->DM_j4310.absolute_angle = feedback_update->gimbal_INS_point->Pitch;
+    feedback_update->DM_j4310.motor_gyro = feedback_update->gimbal_INS_point->Gyro[0];
+
     feedback_update->gimbal_yaw_motor.absolute_angle = feedback_update->gimbal_INS_point->Yaw;
     feedback_update->gimbal_yaw_motor.relative_angle = motor_ecd_to_angle_change(feedback_update->gimbal_yaw_motor.gimbal_motor_measure->ecd, feedback_update->gimbal_yaw_motor.frist_ecd);
     feedback_update->gimbal_yaw_motor.motor_gyro = arm_cos_f32(feedback_update->gimbal_pitch_motor.relative_angle) * (feedback_update->gimbal_INS_point->Gyro[Z]) - arm_sin_f32(feedback_update->gimbal_pitch_motor.relative_angle) * (feedback_update->gimbal_INS_point->Gyro[X]);

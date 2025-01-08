@@ -219,12 +219,24 @@
 #define PITCH_MAX_OUT 30000.0f
 #define PITCH_MIX_OUT -30000.0f
 
-//达喵电机初始化数据
+//达妙电机初始化数据
 #define Angle_Max 12.5f
 #define Omega_Max 5.0f
 #define Torque_Max 5.0f
 #define Current_Max 5.0f
 
+//pitch轴绝对角度控制PID
+#define PITCH_ABSLOUTE_ANGLE_PID_KP                     0.02f
+#define PITCH_ABSLOUTE_ANGLE_PID_KI                     0.0001f
+#define PITCH_ABSLOUTE_ANGLE_PID_KD                     0.00001f
+#define PITCH_ABSLOUTE_ANGLE_PID_KF                     0.0f
+#define PITCH_ABSLOUTE_ANGLE_PID_I_MAXOUT           		1.0f
+#define PITCH_ABSLOUTE_ANGLE_PID_MAX_OUT             		1.0f
+#define PITCH_ABSLOUTE_ANGLE_PID_DEAD_ZONE           		0.01f
+#define PITCH_ABSLOUTE_ANGLE_I_Variable_Speed_A         0.0f
+#define PITCH_ABSLOUTE_ANGLE_I_Variable_Speed_B         0.0f
+#define PITCH_ABSLOUTE_ANGLE_I_Separate_Threshold       0.0f
+#define PID_D_T 0.01f
 typedef enum
 {
     GIMBAL_MOTOR_RAW = 0, //电机原始值控制
@@ -299,12 +311,17 @@ typedef struct
 
     //二阶线性控制器
     gimbal_motor_second_order_linear_controller_t gimbal_motor_second_order_linear_controller;
-  
+		//PID控制器
+    PID_control Absloute_Angle_PID;
+		PID_control abs_PID;
+	
     gimbal_motor_mode_e gimbal_motor_mode;
     gimbal_motor_mode_e last_gimbal_motor_mode;
     uint16_t offset_ecd;
     fp32 max_relative_angle; //rad
     fp32 min_relative_angle; //rad
+	  fp32 max_absolute_angle; //rad
+    fp32 min_absolute_angle; //rad
 
     fp32 relative_angle;     //rad
     fp32 relative_angle_set; //rad
