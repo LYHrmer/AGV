@@ -181,56 +181,32 @@ void gimbal_task(void const *pvParameters)
 {
     // 等待陀螺仪任务更新陀螺仪数据
     // wait a time
-//    vTaskDelay(GIMBAL_TASK_INIT_TIME);
-//    if (can_comm_task_init_finish())
+    vTaskDelay(GIMBAL_TASK_INIT_TIME);
+    // gimbal init
+    // 云台初始化
+    gimbal_init(&gimbal_control);
+    //判断电机是否都上线
+    gimbal_feedback_update(&gimbal_control); // 云台数据反馈
+    while (1)
+    {
+      gimbal_set_mode(&gimbal_control);                    // 设置云台控制模式
+      gimbal_mode_change_control_transit(&gimbal_control); // 控制模式切换 控制数据过渡
+      gimbal_feedback_update(&gimbal_control);             // 云台数据反馈
+      gimbal_set_control(&gimbal_control);                 // 设置云台控制量
+      gimbal_control_loop(&gimbal_control);                // 云台控制计算
+//    if (toe_is_error(DBUS_TOE)){
+//    // 判断遥控器是否掉线
+//    CAN_cmd_gimbal(0, 0);   Motor_DM_Normal_CAN_Send_Disable(&gimbal_control.DM_j4310.motor_j4310); //失能}
+//    else
 //    {
-        // gimbal init
-        // 云台初始化
-//        gimbal_init(&gimbal_control);
-        //判断电机是否都上线
-//       while (toe_is_error(YAW_GIMBAL_MOTOR_TOE) || toe_is_error(PITCH_GIMBAL_MOTOR_TOE))
-//       {
-//           // 等待电机上线，防止电机不工作
-//           vTaskDelay(GIMBAL_CONTROL_TIME);
-//           gimbal_feedback_update(&gimbal_control); // 云台数据反馈
-//       }
-						Motor_DM_Normal_CAN_Send_Enable(&gimbal_control.DM_j4310.motor_j4310);   //使能
-				gimbal_control.DM_j4310.Motor_DM_Control_Method = Motor_DM_Control_Method_NORMAL_MIT;
-			Motor_DM_Normal_Init(&gimbal_control.DM_j4310.motor_j4310,&hcan1,0x11,0x01,Motor_DM_Control_Method_NORMAL_MIT,12.5f,25.0f,10.0f,10.261194f);
-        while (1)
-        {
-//					Motor_DM_Normal_CAN_Send_Enable(&gimbal_control.DM_j4310.motor_j4310);   //使能
-//						  Motor_DM_Normal_CAN_Send_Disable(&gimbal_control.DM_j4310.motor_j4310); //失能
-	  
-	  gimbal_control.DM_j4310.motor_j4310.Control_Angle = 0;
-	  gimbal_control.DM_j4310.motor_j4310.Control_Omega = 0.0f;
-	  gimbal_control.DM_j4310.motor_j4310.Control_Current = 0.0f;
-	  gimbal_control.DM_j4310.motor_j4310.K_P = 40.0f;
-	  gimbal_control.DM_j4310.motor_j4310.K_D = 1.0f;
-	  Motor_DM_Normal_TIM_Send_PeriodElapsedCallback(&gimbal_control.DM_j4310.motor_j4310);
-		CAN_cmd_gimbal(1000, 0);
-//            gimbal_set_mode(&gimbal_control);                    // 设置云台控制模式
-//            gimbal_mode_change_control_transit(&gimbal_control); // 控制模式切换 控制数据过渡
-//            gimbal_feedback_update(&gimbal_control);             // 云台数据反馈
-//            gimbal_set_control(&gimbal_control);                 // 设置云台控制量
-//            gimbal_control_loop(&gimbal_control);                // 云台控制计算
-
-//                if (toe_is_error(DBUS_TOE))
-//                    // 判断遥控器是否掉线
-//                    CAN_cmd_gimbal(0, 0);
-//                else
-//                {
-//									if(gimbal_control.gimbal_rc_ctrl->rc.s[1] == 2)
-//										CAN_cmd_gimbal(0, 0);
-//									else
-//										CAN_cmd_gimbal(gimbal_control.gimbal_yaw_motor.given_current, -gimbal_control.gimbal_pitch_motor.given_current);
-//            }
-
-            vTaskDelay(1);
+		  CAN_cmd_gimbal(gimbal_control.gimbal_yaw_motor.given_current,0);
+		  Motor_DM_Normal_TIM_Send_PeriodElapsedCallback(&gimbal_control.DM_j4310.motor_j4310);
+//    }
+      vTaskDelay(1);
 //#if INCLUDE_uxTaskGetStackHighWaterMark
 //            gimbal_high_water = uxTaskGetStackHighWaterMark(NULL);
 //#endif
-        }
+    }
 //    }
 }
 
@@ -264,9 +240,7 @@ static void gimbal_init(gimbal_control_t *init)
 
     const static fp32 gimbal_yaw_auto_scan_order_filter[1] = {GIMBAL_YAW_AUTO_SCAN_NUM};
     const static fp32 gimbal_pitch_auto_scan_order_filter[1] = {GIMBAL_PITCH_AUTO_SCAN_NUM};
-	
-	
-
+		
     // 给底盘跟随云台模式用的
     gimbal_control.gimbal_yaw_motor.zero_ecd_flag = GIMBAL_YAW_LAST_OFFSET_ENCODE;
     gimbal_control.gimbal_yaw_motor.last_zero_ecd = GIMBAL_YAW_LAST_OFFSET_ENCODE;
@@ -298,15 +272,28 @@ static void gimbal_init(gimbal_control_t *init)
 		//stm32pid初始化
 		 stm32_pid_init_pitch(); 
     
-    // yaw轴电机初始化
+    // yaw轴6020电机初始化
     init->gimbal_yaw_motor.absolute_angle_set = init->gimbal_yaw_motor.absolute_angle;
     init->gimbal_yaw_motor.relative_angle_set = init->gimbal_yaw_motor.relative_angle;
     init->gimbal_yaw_motor.motor_gyro_set = init->gimbal_yaw_motor.motor_gyro;
-    // pitch轴电机初始化
+		
+    // pitch轴6020电机初始化
     init->gimbal_pitch_motor.absolute_angle_set = init->gimbal_pitch_motor.absolute_angle;
     init->gimbal_pitch_motor.relative_angle_set = init->gimbal_pitch_motor.relative_angle;
     init->gimbal_pitch_motor.motor_gyro_set = init->gimbal_pitch_motor.motor_gyro;
-
+		
+    //达妙电机初始化
+		Motor_DM_Normal_CAN_Send_Enable(&gimbal_control.DM_j4310.motor_j4310);   //达妙电机使能
+		gimbal_control.DM_j4310.Motor_DM_Control_Method = Motor_DM_Control_Method_NORMAL_MIT; //达妙电机模式设置
+		Motor_DM_Normal_Init(&gimbal_control.DM_j4310.motor_j4310,&hcan1,
+	                     0x11,0x01,Motor_DM_Control_Method_NORMAL_MIT,
+	                     Angle_Max,Omega_Max,Torque_Max,Current_Max); //达妙电机初始化
+		gimbal_control.DM_j4310.motor_j4310.Control_Angle = 0;
+		gimbal_control.DM_j4310.motor_j4310.Control_Omega = 0.0f;
+		gimbal_control.DM_j4310.motor_j4310.Control_Current = 0.0f;
+		gimbal_control.DM_j4310.motor_j4310.K_P = 40.0f;
+		gimbal_control.DM_j4310.motor_j4310.K_D = 1.0f;
+		
      //初始化云台自动扫描低通滤波
     first_order_filter_init(&init->gimbal_auto_scan.pitch_auto_scan_first_order_filter, GIMBAL_CONTROL_TIME, gimbal_pitch_auto_scan_order_filter);
     first_order_filter_init(&init->gimbal_auto_scan.yaw_auto_scan_first_order_filter, GIMBAL_CONTROL_TIME, gimbal_yaw_auto_scan_order_filter);
@@ -363,7 +350,8 @@ static void gimbal_feedback_update(gimbal_control_t *feedback_update)
     feedback_update->gimbal_pitch_motor.relative_angle = -motor_ecd_to_angle_change(feedback_update->gimbal_pitch_motor.gimbal_motor_measure->ecd,
                                                                                     feedback_update->gimbal_pitch_motor.offset_ecd);
     feedback_update->gimbal_pitch_motor.motor_gyro = feedback_update->gimbal_INS_point->Gyro[0];
-
+//    feedback_update->gimbal_pitch_j4310.absolute_angle = feedback_update->gimbal_INS_point->Pitch;
+//    feedback_update->gimbal_pitch_j4310.motor_gyro = feedback_update->gimbal_INS_point->Gyro[0];
     feedback_update->gimbal_yaw_motor.absolute_angle = feedback_update->gimbal_INS_point->Yaw;
     feedback_update->gimbal_yaw_motor.relative_angle = motor_ecd_to_angle_change(feedback_update->gimbal_yaw_motor.gimbal_motor_measure->ecd, feedback_update->gimbal_yaw_motor.frist_ecd);
     feedback_update->gimbal_yaw_motor.motor_gyro = arm_cos_f32(feedback_update->gimbal_pitch_motor.relative_angle) * (feedback_update->gimbal_INS_point->Gyro[Z]) - arm_sin_f32(feedback_update->gimbal_pitch_motor.relative_angle) * (feedback_update->gimbal_INS_point->Gyro[X]);
@@ -649,8 +637,6 @@ static void gimbal_motor_absolute_angle_control(gimbal_motor_t *gimbal_motor)
     //赋值电流值
     gimbal_motor->given_current = (int16_t)(gimbal_motor->current_set);
 
-//		stm32_step_pitch(gimbal_motor->absolute_angle_set,gimbal_motor->absolute_angle,0);
-//		gimbal_motor->given_current = stm32_Y_pitch.Out1;
 }
 /**
  * @brief          云台控制模式:GIMBAL_MOTOR_ENCONDE，使用编码相对角进行控制

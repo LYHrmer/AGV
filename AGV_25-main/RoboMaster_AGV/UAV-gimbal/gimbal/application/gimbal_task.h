@@ -116,11 +116,6 @@
 //电机码盘值最大以及中值
 #define HALF_ECD_RANGE  4096
 #define ECD_RANGE       8191
-////云台初始化回中值，允许的误差,并且在误差范围内停止一段时间以及最大时间6s后解除初始化状态，
-//#define GIMBAL_INIT_ANGLE_ERROR     0.01f
-//#define GIMBAL_INIT_STOP_TIME       100
-//#define GIMBAL_INIT_TIME            5000
-//#define GIMBAL_CALI_REDUNDANT_ANGLE 0.1f
 //云台初始化回中值，允许的误差,并且在误差范围内停止一段时间以及最大时间6s后解除初始化状态，
 #define GIMBAL_INIT_ANGLE_ERROR     0.1f
 #define GIMBAL_INIT_STOP_TIME       100
@@ -224,12 +219,19 @@
 #define PITCH_MAX_OUT 30000.0f
 #define PITCH_MIX_OUT -30000.0f
 
+//达喵电机初始化数据
+#define Angle_Max 12.5f
+#define Omega_Max 5.0f
+#define Torque_Max 5.0f
+#define Current_Max 5.0f
+
 typedef enum
 {
     GIMBAL_MOTOR_RAW = 0, //电机原始值控制
     GIMBAL_MOTOR_GYRO,    //电机陀螺仪角度控制
     GIMBAL_MOTOR_ENCONDE, //电机编码值角度控制
 } gimbal_motor_mode_e;
+
 
 //哨兵扫描结构体，用于在上位机未识别到目标时自动扫描做准备
 typedef struct 
