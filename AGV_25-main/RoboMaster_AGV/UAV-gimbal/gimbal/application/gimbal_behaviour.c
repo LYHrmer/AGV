@@ -301,11 +301,19 @@ static void gimbal_behavour_set(gimbal_control_t *gimbal_mode_set)
 
     static int mode = 0;
 		
+    if (press_r_last_s && gimbal_mode_set->gimbal_rc_ctrl->mouse.press_r)
+    {
+        mode = 3; // gimbal_mode_set->right_click_time++;
+    }
+    else
+    {
+        mode = 1;
+    }
     if (switch_is_mid(gimbal_mode_set->gimbal_rc_ctrl->rc.s[GIMBAL_MODE_CHANNEL]))
     {
         if (mode == 3)
         {
-            gimbal_behaviour = GIMBAL_RC;
+            gimbal_behaviour = GIMBAL_AUTO_ATTACK;
         }
         else if (mode == 1)
         {
@@ -321,14 +329,14 @@ static void gimbal_behavour_set(gimbal_control_t *gimbal_mode_set)
             }
         }
     }
-    if (switch_is_down(gimbal_mode_set->gimbal_rc_ctrl->rc.s[GIMBAL_MODE_CHANNEL]))
+    if (switch_is_down(gimbal_mode_set->gimbal_rc_ctrl->rc.s[GIMBAL_MODE_CHANNEL]))   //拨杆下，云台无力
     {
         // 切换到遥控器控制模式
-        gimbal_behaviour = GIMBAL_RC;
+        gimbal_behaviour = GIMBAL_ZERO_FORCE;
     }
-    else if (switch_is_up(gimbal_mode_set->gimbal_rc_ctrl->rc.s[GIMBAL_MODE_CHANNEL]))
+    else if (switch_is_up(gimbal_mode_set->gimbal_rc_ctrl->rc.s[GIMBAL_MODE_CHANNEL]))  //拨杆下，云台自瞄
     {
-				gimbal_behaviour = GIMBAL_RC;
+				gimbal_behaviour = GIMBAL_AUTO_ATTACK;
     }
 
     // 遥控器报错处理
@@ -339,14 +347,7 @@ static void gimbal_behavour_set(gimbal_control_t *gimbal_mode_set)
 
     // 判断进入初始化模式
     static gimbal_behaviour_e last_gimbal_behaviour = GIMBAL_RC;
-		
-//    // 判断云台从无力模式转为其他模式,进入初始化状态
-//    if (last_gimbal_behaviour == GIMBAL_ZERO_FORCE && gimbal_behaviour != GIMBAL_ZERO_FORCE)
-//    {
-//        gimbal_behaviour = GIMBAL_INIT;
-//        // 标志初始化未完成
-//        gimbal_init_finish_flag = 0;
-//    }
+	
 
     // 保存历史数据
     last_gimbal_behaviour = gimbal_behaviour;

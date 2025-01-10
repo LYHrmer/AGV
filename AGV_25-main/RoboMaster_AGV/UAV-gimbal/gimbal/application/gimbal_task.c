@@ -262,9 +262,9 @@ static void gimbal_init(gimbal_control_t *init)
 
     // 云台计算相对角用 
     gimbal_control.gimbal_yaw_motor.frist_ecd = GIMBAL_YAW_OFFSET_ENCODE;
-    // 电机数据指针获取
+		
+    // 6020电机数据指针获取
     init->gimbal_yaw_motor.gimbal_motor_measure = get_yaw_gimbal_motor_measure_point();
-//    init->gimbal_pitch_motor.gimbal_motor_measure = get_pitch_gimbal_motor_measure_point();
     // 陀螺仪数据指针获取
     init->gimbal_INS_point = get_INS_point();
     // 遥控器数据指针获取
@@ -303,7 +303,6 @@ static void gimbal_init(gimbal_control_t *init)
 		Motor_DM_Normal_Init(&init->DM_j4310.motor_j4310,&hcan1,
 	                     0x11,0x01,Motor_DM_Control_Method_NORMAL_MIT,
 	                     Angle_Max,Omega_Max,Torque_Max,Current_Max); //达妙电机初始化
-//		init->DM_j4310.motor_j4310.Control_Angle = 0;
 		init->DM_j4310.motor_j4310.Control_Omega = 0.0f;
 		init->DM_j4310.motor_j4310.Control_Current = 0.0f;
 		init->DM_j4310.motor_j4310.K_P = 40.0f;
@@ -331,6 +330,10 @@ static void gimbal_init(gimbal_control_t *init)
     init->DM_j4310.min_relative_angle = motor_ecd_to_angle_change(GIMBAL_PITCH_MIN_ENCODE, init->DM_j4310.offset_ecd);
     init->DM_j4310.max_absolute_angle = PI /6;
     init->DM_j4310.min_absolute_angle = -PI /6;
+		
+//		// 设置yaw轴相对角最大值，飞机yaw轴专用，舵步忽略
+//    init->gimbal_yaw_motor.max_relative_angle = motor_ecd_to_angle_change(GIMBAL_YAW_MAX_ENCODE, init->gimbal_yaw_motor.offset_ecd);
+//    init->gimbal_yaw_motor.min_relative_angle = motor_ecd_to_angle_change(GIMBAL_YAW_MIN_ENCODE, init->gimbal_yaw_motor.offset_ecd);
 		
 		//pitch轴绝对角度控制PID初始化
     PID_UP_Init(&init->DM_j4310.Absloute_Angle_PID,PITCH_ABSLOUTE_ANGLE_PID_KP, PITCH_ABSLOUTE_ANGLE_PID_KI, PITCH_ABSLOUTE_ANGLE_PID_KD, 
@@ -526,42 +529,45 @@ static void gimbal_absolute_angle_limit(gimbal_motor_t *gimbal_motor, fp32 add)
     {
         angle_set_yaw = gimbal_motor->absolute_angle_set;
         gimbal_motor->absolute_angle_set = rad_format(angle_set_yaw + add);
-    }
-    else if (gimbal_motor == &gimbal_control.DM_j4310)
-    {
-        // 当前误差角度
+			
+//        // 当前误差角度   飞机yaw轴使用，舵步可以忽略
 //        static fp32 error_angle = 0;
-//        static fp32 angle_set = 0;	
+//        static fp32 angle_set = 0;
 //        error_angle = rad_format(gimbal_motor->absolute_angle_set - gimbal_motor->absolute_angle);
 //        // 云台相对角度+ 误差角度 + 新增角度 如果大于 最大机械角度
-//        if (gimbal_motor->absolute_angle + error_angle + add < gimbal_motor->max_absolute_angle)
+//        if (gimbal_motor->relative_angle + error_angle + add < gimbal_motor->max_relative_angle)
 //        {
 //            // 如果是往最大机械角度控制方向
 //            if (add < 0.0f)
 //            {
 //                // 计算出一个最大的添加角度，
-//                add = gimbal_motor->max_absolute_angle - gimbal_motor->absolute_angle - error_angle;
+//                add = gimbal_motor->max_relative_angle - gimbal_motor->relative_angle - error_angle;
 //            }
 //        }
-//        else if (gimbal_motor->absolute_angle + error_angle + add > gimbal_motor->min_absolute_angle)
+//        else if (gimbal_motor->relative_angle + error_angle + add > gimbal_motor->min_relative_angle)
 //        {
 //            if (add > 0.0f)
 //            {
-//                add = gimbal_motor->min_absolute_angle - gimbal_motor->absolute_angle - error_angle;
+//                add = gimbal_motor->min_relative_angle - gimbal_motor->relative_angle - error_angle;
 //            }
 //        }
-
-    static fp32 angle_set = 0;
-		angle_set = gimbal_motor->absolute_angle_set;		
-    gimbal_motor->absolute_angle_set = angle_set + add;
-		if(gimbal_motor->absolute_angle_set > gimbal_motor->max_absolute_angle)
-		{
-			gimbal_motor->absolute_angle_set = gimbal_motor->max_absolute_angle;
-		}
-		if(gimbal_motor->absolute_angle_set < gimbal_motor->min_absolute_angle)
-		{
-			gimbal_motor->absolute_angle_set = gimbal_motor->min_absolute_angle;
-		}
+//        angle_set = gimbal_motor->absolute_angle_set;
+//        gimbal_motor->absolute_angle_set = rad_format(angle_set + add);
+    }
+    else if (gimbal_motor == &gimbal_control.DM_j4310)
+    {
+        // 当前误差角度
+			static fp32 angle_set = 0;
+			angle_set = gimbal_motor->absolute_angle_set;		
+			gimbal_motor->absolute_angle_set = angle_set + add;
+			if(gimbal_motor->absolute_angle_set > gimbal_motor->max_absolute_angle)
+			{
+				gimbal_motor->absolute_angle_set = gimbal_motor->max_absolute_angle;
+			}
+			if(gimbal_motor->absolute_angle_set < gimbal_motor->min_absolute_angle)
+			{
+				gimbal_motor->absolute_angle_set = gimbal_motor->min_absolute_angle;
+			}
 		
     }
 }
@@ -677,13 +683,12 @@ static void gimbal_motor_absolute_angle_control(gimbal_motor_t *gimbal_motor)
 	  gimbal_motor->Absloute_Angle_PID.Target = gimbal_motor->absolute_angle_set;
     gimbal_motor->Absloute_Angle_PID.Now = gimbal_motor->absolute_angle;
     PID_TIM_Adjust_PeriodElapsedCallback(&gimbal_motor->Absloute_Angle_PID);
-    if(gimbal_motor->motor_j4310.Rx_Data.Now_Angle>1 && gimbal_motor->motor_j4310.Control_Angle>1 &&gimbal_motor->absolute_angle_set>1)
+    if(gimbal_motor->motor_j4310.Rx_Data.Now_Angle>1 && gimbal_motor->motor_j4310.Control_Angle>1 &&gimbal_motor->absolute_angle_set>1) //限位1
 			gimbal_motor->motor_j4310.Control_Angle = 1;
-		else if(gimbal_motor->motor_j4310.Rx_Data.Now_Angle<-1 && gimbal_motor->motor_j4310.Control_Angle<-1 &&gimbal_motor->absolute_angle_set<-1)
+		else if(gimbal_motor->motor_j4310.Rx_Data.Now_Angle<-1 && gimbal_motor->motor_j4310.Control_Angle<-1 &&gimbal_motor->absolute_angle_set<-1)//限位-1
 			gimbal_motor->motor_j4310.Control_Angle = -1;
 		else
 			gimbal_motor->motor_j4310.Control_Angle -= gimbal_motor->Absloute_Angle_PID.Out;
-   // gimbal_motor->motor_j4310.Control_Angle += gimbal_motor->absolute_angle_set - gimbal_motor->absolute_angle;
     Motor_DM_Normal_TIM_Send_PeriodElapsedCallback(&gimbal_motor->motor_j4310);
 		}
 }
