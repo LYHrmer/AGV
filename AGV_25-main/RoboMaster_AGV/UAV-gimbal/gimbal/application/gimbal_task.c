@@ -240,7 +240,6 @@ const gimbal_motor_t *get_yaw_motor_point(void)
  */
 const gimbal_motor_t *get_pitch_motor_point(void)
 {
-//    return &gimbal_control.gimbal_pitch_motor;DM_j4310
 	  return &gimbal_control.DM_j4310;
 }
 
@@ -269,10 +268,10 @@ static void gimbal_init(gimbal_control_t *init)
     init->gimbal_INS_point = get_INS_point();
     // 遥控器数据指针获取
     init->gimbal_rc_ctrl = get_remote_control_point();
-//    // 获取上位机视觉数据指针
-//    init->gimbal_vision_point = get_vision_gimbal_point();
-//    // 获取自动移动结构体
-//    init->auto_move_point = get_auto_move_point();
+    // 获取上位机视觉数据指针
+    init->gimbal_vision_point = get_vision_gimbal_point();
+    // 获取自动移动结构体
+    init->auto_move_point = get_auto_move_point();
     // 初始化电机模式
     init->gimbal_yaw_motor.gimbal_motor_mode = init->gimbal_yaw_motor.last_gimbal_motor_mode = GIMBAL_MOTOR_RAW;
     init->DM_j4310.gimbal_motor_mode = init->DM_j4310.last_gimbal_motor_mode = GIMBAL_MOTOR_RAW;
@@ -688,7 +687,7 @@ static void gimbal_motor_absolute_angle_control(gimbal_motor_t *gimbal_motor)
 		else if(gimbal_motor->motor_j4310.Rx_Data.Now_Angle<-1 && gimbal_motor->motor_j4310.Control_Angle<-1 &&gimbal_motor->absolute_angle_set<-1)//限位-1
 			gimbal_motor->motor_j4310.Control_Angle = -1;
 		else
-			gimbal_motor->motor_j4310.Control_Angle -= gimbal_motor->Absloute_Angle_PID.Out;
+			gimbal_motor->motor_j4310.Control_Angle -= gimbal_motor->Absloute_Angle_PID.Out; //负号，如果电机外装改为﹢
     Motor_DM_Normal_TIM_Send_PeriodElapsedCallback(&gimbal_motor->motor_j4310);
 		}
 }

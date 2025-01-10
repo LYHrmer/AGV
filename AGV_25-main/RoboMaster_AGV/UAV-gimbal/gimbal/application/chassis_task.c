@@ -226,12 +226,11 @@ static void chassis_set_mode(chassis_move_t *chassis_move_mode)
                 chassis_move_mode->chassis_behaviour = CHASSIS_FOLLOW_GIMBAL_YAW;
             }
 
-            // 按shift超电加速
-            if (chassis_move_mode->chassis_RC->key.v & KEY_PRESSED_OFFSET_SHIFT)
+            if (chassis_move_mode->chassis_RC->key.v & KEY_PRESSED_OFFSET_SHIFT)  //按shift超电加速
             {
                 gimbal_control.CAP_Output = CAP_OUTPUT_to_CHASSIS;
             }
-						else if(chassis_move_mode->chassis_RC->key.v & KEY_PRESSED_OFFSET_E)
+						else if(chassis_move_mode->chassis_RC->key.v & KEY_PRESSED_OFFSET_E)  //飞坡模式
 						{
 								gimbal_control.CAP_Output = CAP_OUTPUT_to_CHASSIS_FLY;
 						}
