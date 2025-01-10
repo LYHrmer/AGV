@@ -652,8 +652,7 @@ static void gimbal_motor_relative_angle_control(gimbal_motor_t *gimbal_motor)
     gimbal_motor->current_set = gimbal_motor_second_order_linear_controller_calc(&gimbal_motor->gimbal_motor_second_order_linear_controller, gimbal_motor->relative_angle_set, gimbal_motor->relative_angle, gimbal_motor->gimbal_motor_measure->speed_rpm, gimbal_motor->gimbal_motor_measure->given_current);
     //赋值电流值
     gimbal_motor->given_current = (int16_t)(gimbal_motor->current_set);
-//		stm32_step_pitch(gimbal_motor->relative_angle_set,gimbal_motor->relative_angle,0);
-//		gimbal_motor->given_current = stm32_Y_pitch.Out1;
+
 }
 
 /**
