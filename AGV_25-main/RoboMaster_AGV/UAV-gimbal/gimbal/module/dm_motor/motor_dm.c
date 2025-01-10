@@ -327,8 +327,17 @@ void Motor_DM_Normal_Data_Process(Motor_DM_Normal *motor)
     }
     motor->Rx_Data.Total_Encoder = motor->Rx_Data.Total_Round * (1 << 16) + tmp_encoder - ((1 << 15) - 1);
 
+		
+		    // 计算电机本身信息
+    static float now_angle=0;
+    now_angle = (float) (motor->Rx_Data.Total_Encoder) / (float) ((1 << 16) - 1) * motor->Angle_Max * 2.0f;
+    if(now_angle < -12.56637061) now_angle+=25;
+    motor->Rx_Data.Now_Angle=now_angle;
     // 计算电机本身信息
-    motor->Rx_Data.Now_Angle = (float)(motor->Rx_Data.Total_Encoder) / (float)((1 << 16) - 1) * motor->Angle_Max * 2.0f;
+    //motor->Rx_Data.Now_Angle = (float)(motor->Rx_Data.Total_Encoder) / (float)((1 << 16) - 1) * motor->Angle_Max * 2.0f;
+		
+		
+		
     motor->Rx_Data.Now_Omega = Math_Int_To_Float(tmp_omega, 0x7ff, (1 << 12) - 1, 0, motor->Omega_Max);
     motor->Rx_Data.Now_Torque = Math_Int_To_Float(tmp_torque, 0x7ff, (1 << 12) - 1, 0, motor->Torque_Max);
     motor->Rx_Data.Now_MOS_Temperature = tmp_buffer->MOS_Temperature + CELSIUS_TO_KELVIN;

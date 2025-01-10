@@ -96,10 +96,10 @@ static void gimbal_behavour_set(gimbal_control_t *gimbal_mode_set);
  */
 static void gimbal_zero_force_control(fp32 *yaw, fp32 *pitch, gimbal_control_t *gimbal_control_set);
 
-/**
- * @brief          云台初始化控制，电机是陀螺仪角度控制，云台先抬起pitch轴，后旋转yaw轴
- */
-static void gimbal_init_control(fp32 *yaw, fp32 *pitch, gimbal_control_t *gimbal_control_set);
+///**
+// * @brief          云台初始化控制，电机是陀螺仪角度控制，云台先抬起pitch轴，后旋转yaw轴
+// */
+//static void gimbal_init_control(fp32 *yaw, fp32 *pitch, gimbal_control_t *gimbal_control_set);
 
 /**
  * @brief          云台控制，电机是角度控制，
@@ -173,32 +173,32 @@ void gimbal_behaviour_mode_set(gimbal_control_t *gimbal_mode_set)
     {
         // 无力模式下,设置为电机原始值控制，方便让电机处于无力态
         gimbal_mode_set->gimbal_yaw_motor.gimbal_motor_mode = GIMBAL_MOTOR_RAW;
-        gimbal_mode_set->gimbal_pitch_motor.gimbal_motor_mode = GIMBAL_MOTOR_RAW;
+        gimbal_mode_set->DM_j4310.gimbal_motor_mode = GIMBAL_MOTOR_RAW;
     }
     else if (gimbal_behaviour == GIMBAL_RC)
     {
         gimbal_mode_set->gimbal_yaw_motor.gimbal_motor_mode = GIMBAL_MOTOR_GYRO;   // yaw轴通过陀螺仪的绝对角控制
-        gimbal_mode_set->gimbal_pitch_motor.gimbal_motor_mode = GIMBAL_MOTOR_GYRO; // pitch轴通过陀螺仪的绝对角控制
+        gimbal_mode_set->DM_j4310.gimbal_motor_mode = GIMBAL_MOTOR_GYRO; // pitch轴通过陀螺仪的绝对角控制
     }
     else if (gimbal_behaviour == GIMBAL_INIT)
     {
         gimbal_mode_set->gimbal_yaw_motor.gimbal_motor_mode = GIMBAL_MOTOR_GYRO;   // yaw轴通过陀螺仪的绝对角控制
-        gimbal_mode_set->gimbal_pitch_motor.gimbal_motor_mode = GIMBAL_MOTOR_GYRO; // pitch轴通过陀螺仪的绝对角控制
+        gimbal_mode_set->DM_j4310.gimbal_motor_mode = GIMBAL_MOTOR_GYRO; // pitch轴通过陀螺仪的绝对角控制
     }
     else if (gimbal_behaviour == GIMBAL_AUTO_SCAN)
     {
         gimbal_mode_set->gimbal_yaw_motor.gimbal_motor_mode = GIMBAL_MOTOR_GYRO;   // yaw轴通过陀螺仪的绝对角控制
-        gimbal_mode_set->gimbal_pitch_motor.gimbal_motor_mode = GIMBAL_MOTOR_GYRO; // pitch轴通过陀螺仪的绝对角控制
+        gimbal_mode_set->DM_j4310.gimbal_motor_mode = GIMBAL_MOTOR_GYRO; // pitch轴通过陀螺仪的绝对角控制
     }
     else if (gimbal_behaviour == GIMBAL_AUTO_ATTACK)
     {
         gimbal_mode_set->gimbal_yaw_motor.gimbal_motor_mode = GIMBAL_MOTOR_GYRO;   // yaw轴通过陀螺仪的绝对角控制
-        gimbal_mode_set->gimbal_pitch_motor.gimbal_motor_mode = GIMBAL_MOTOR_GYRO; // pitch轴通过陀螺仪的绝对角控制
+        gimbal_mode_set->DM_j4310.gimbal_motor_mode = GIMBAL_MOTOR_GYRO; // pitch轴通过陀螺仪的绝对角控制
     }
     else if (gimbal_behaviour == GIMBAL_MOTIONLESS)
     {
         gimbal_mode_set->gimbal_yaw_motor.gimbal_motor_mode = GIMBAL_MOTOR_ENCONDE;
-        gimbal_mode_set->gimbal_pitch_motor.gimbal_motor_mode = GIMBAL_MOTOR_ENCONDE;
+        gimbal_mode_set->DM_j4310.gimbal_motor_mode = GIMBAL_MOTOR_ENCONDE;
     }
 }
 
@@ -220,10 +220,10 @@ void gimbal_behaviour_control_set(fp32 *add_yaw, fp32 *add_pitch, gimbal_control
     {
         gimbal_zero_force_control(add_yaw, add_pitch, gimbal_control_set);
     }
-    else if (gimbal_behaviour == GIMBAL_INIT) // 初始化模式，云台初始化
-    {
-        gimbal_init_control(add_yaw, add_pitch, gimbal_control_set);
-    }
+//    else if (gimbal_behaviour == GIMBAL_INIT) // 初始化模式，云台初始化
+//    {
+//        gimbal_init_control(add_yaw, add_pitch, gimbal_control_set);
+//    }
     else if (gimbal_behaviour == GIMBAL_RC) // 遥控器控制模式,绝对角控制
     {
         gimbal_RC_control(add_yaw, add_pitch, gimbal_control_set);
@@ -294,94 +294,18 @@ static void gimbal_behavour_set(gimbal_control_t *gimbal_mode_set)
         return;
     }
     // 判断是否为初始化模式
-    if (gimbal_behaviour == GIMBAL_INIT)
-    {
-        // 初始化时间
-        static int init_time = 0;
-        if (switch_is_down(gimbal_mode_set->gimbal_rc_ctrl->rc.s[GIMBAL_MODE_CHANNEL]))
-        {
-            // 停止初始化
-            init_time = 0;
-        }
-        else
-        {
-            init_time++; // 初始化时间增加
-            // 是否初始化完成
-            if ((fabs(gimbal_mode_set->gimbal_pitch_motor.absolute_angle - INIT_PITCH_SET) > GIMBAL_INIT_ANGLE_ERROR) ||
-                (abs(gimbal_mode_set->gimbal_yaw_motor.gimbal_motor_measure->ecd - gimbal_mode_set->gimbal_yaw_motor.frist_ecd) * MOTOR_ECD_TO_RAD > GIMBAL_INIT_ANGLE_ERROR))
-            {
-                // 初始化未完成，判断初始化时间
-                if (init_time >= GIMBAL_INIT_TIME)
-                {
-                    // 不进行任何行为，直接判断进入其他模式,计时归零
-                    init_time = 0;
-                }
-                else
-                {
-                    // 退出模式选择，依旧为初始化模式
-                    return;
-                }
-            }
-            else
-            {
-                // 初始化次数
-                static int init_finish_count = 0;
-                init_finish_count++;
 
-                // 初始化完成,计时归零,重新计时
-                init_time = 0;
-                // 标志初始化完成
-                gimbal_init_finish_flag = 1;
-                if (init_finish_count == 1)
-                {
-                    // 保留数据 -- 记录场地正方向
-                    gimbal_mode_set->yaw_positive_direction = gimbal_mode_set->gimbal_yaw_motor.absolute_angle_set;
-                }
-            }
-        }
-    }
     static int8_t press_r_last_s = 0;
     static int16_t last_key_G = 0;
     static int16_t move = 0;
 
-    //  if (!last_key_G && gimbal_mode_set->gimbal_rc_ctrl->key.v & KEY_PRESSED_OFFSET_G)
-    //  {
-    //    move = !move;
-    //  }
-    //
     static int mode = 0;
-    if (press_r_last_s && gimbal_mode_set->gimbal_rc_ctrl->mouse.press_r)
-    {
-        mode = 3; // gimbal_mode_set->right_click_time++;
-    }
-    else
-    {
-        mode = 1;
-    }
-    //  static int mode = 0;
-    //  if (gimbal_mode_set->gimbal_rc_ctrl->key.v & KEY_PRESSED_OFFSET_B)
-    //  {
-    //    mode = 1;
-    //  }
-    //  if (gimbal_mode_set->gimbal_rc_ctrl->key.v & KEY_PRESSED_OFFSET_V)
-    //  {
-    //    mode = 2;
-    //  }
-    //   if (gimbal_mode_set->right_click_time>40)
-    //  {
-    //    mode = 3;
-    //  }
-    //
-    //    if (switch_is_down(gimbal_mode_set->gimbal_rc_ctrl->rc.s[GIMBAL_MODE_CHANNEL]))
-    //    {
-    //        // 遥控器控制模式
-    //        gimbal_behaviour = GIMBAL_ZERO_FORCE;
-    //    }
+		
     if (switch_is_mid(gimbal_mode_set->gimbal_rc_ctrl->rc.s[GIMBAL_MODE_CHANNEL]))
     {
         if (mode == 3)
         {
-            gimbal_behaviour = GIMBAL_AUTO_ATTACK;
+            gimbal_behaviour = GIMBAL_RC;
         }
         else if (mode == 1)
         {
@@ -396,10 +320,6 @@ static void gimbal_behavour_set(gimbal_control_t *gimbal_mode_set)
                 gimbal_behaviour = GIMBAL_RC;
             }
         }
-        //    else
-        //    {
-        //      gimbal_behaviour = GIMBAL_ZERO_FORCE;
-        //    }
     }
     if (switch_is_down(gimbal_mode_set->gimbal_rc_ctrl->rc.s[GIMBAL_MODE_CHANNEL]))
     {
@@ -408,30 +328,7 @@ static void gimbal_behavour_set(gimbal_control_t *gimbal_mode_set)
     }
     else if (switch_is_up(gimbal_mode_set->gimbal_rc_ctrl->rc.s[GIMBAL_MODE_CHANNEL]))
     {
-
-        gimbal_behaviour = GIMBAL_AUTO_ATTACK;
-        // // 切换到云台自动模式
-        // // 判断当前模式是否为自动移动模式
-        // if (judge_cur_mode_is_auto_move_mode())
-        // {
-        //     //是自动移动模式
-        //     gimbal_behaviour = GIMBAL_AUTO_MOVE;  //云台自动移动模式
-        // }
-        // else
-        // {
-        //     // 不是自动移动模式
-        //     // 根据视觉是否识别，自动控制模式
-        //     if (judge_vision_appear_target())
-        //     {
-        //         // 识别到目标
-        //         gimbal_behaviour = GIMBAL_AUTO_ATTACK; // 云台自动袭击模式
-        //     }
-        //     else
-        //     {
-        //         // 未识别到目标
-        //         gimbal_behaviour = GIMBAL_AUTO_SCAN; // 云台自动扫描模式
-        //     }
-        // }
+				gimbal_behaviour = GIMBAL_RC;
     }
 
     // 遥控器报错处理
@@ -441,24 +338,16 @@ static void gimbal_behavour_set(gimbal_control_t *gimbal_mode_set)
     }
 
     // 判断进入初始化模式
-    static gimbal_behaviour_e last_gimbal_behaviour = GIMBAL_ZERO_FORCE;
-    // 判断云台从无力模式转为其他模式,进入初始化状态
-    if (last_gimbal_behaviour == GIMBAL_ZERO_FORCE && gimbal_behaviour != GIMBAL_ZERO_FORCE)
-    {
-        gimbal_behaviour = GIMBAL_INIT;
-        // 标志初始化未完成
-        gimbal_init_finish_flag = 0;
-    }
+    static gimbal_behaviour_e last_gimbal_behaviour = GIMBAL_RC;
+		
+//    // 判断云台从无力模式转为其他模式,进入初始化状态
+//    if (last_gimbal_behaviour == GIMBAL_ZERO_FORCE && gimbal_behaviour != GIMBAL_ZERO_FORCE)
+//    {
+//        gimbal_behaviour = GIMBAL_INIT;
+//        // 标志初始化未完成
+//        gimbal_init_finish_flag = 0;
+//    }
 
-    // 判断是否发生云台从其他模式切入自动扫描模式模式
-    //    if (last_gimbal_behaviour != GIMBAL_AUTO_SCAN && gimbal_behaviour == GIMBAL_AUTO_SCAN)
-    //    {
-    //        // 用于自动扫描 -- 重新初始化扫描初始时间
-    //        gimbal_mode_set->gimbal_auto_scan.scan_begin_time = TIME_MS_TO_S(HAL_GetTick());
-    //        // 用于自动扫描 -- 重新设置云台yaw轴扫描中点，为当前位置
-    //        gimbal_mode_set->gimbal_auto_scan.yaw_center_value = gimbal_mode_set->gimbal_yaw_motor.absolute_angle;
-    //        gimbal_mode_set->gimbal_auto_scan.pitch_center_value = gimbal_mode_set->gimbal_pitch_motor.absolute_angle;
-    //    }
     // 保存历史数据
     last_gimbal_behaviour = gimbal_behaviour;
     press_r_last_s = gimbal_mode_set->gimbal_rc_ctrl->mouse.press_r;
@@ -488,8 +377,8 @@ static void gimbal_RC_control(fp32 *yaw, fp32 *pitch, gimbal_control_t *gimbal_c
     static fp32 rc_add_yaw, rc_add_yaw_RC;
     static fp32 rc_add_pit, rc_add_pit_RC;
     // 遥控器控制
-    rc_deadband_limit(gimbal_control_set->gimbal_rc_ctrl->rc.ch[YAW_CHANNEL], yaw_channel_RC, RC_DEADBAND);
-    rc_deadband_limit(gimbal_control_set->gimbal_rc_ctrl->rc.ch[PITCH_CHANNEL], pitch_channel_RC, RC_DEADBAND);
+    rc_deadband_limit(gimbal_control_set->gimbal_rc_ctrl->rc.ch[YAW_CHANNEL], yaw_channel_RC, 0);
+    rc_deadband_limit(gimbal_control_set->gimbal_rc_ctrl->rc.ch[PITCH_CHANNEL], pitch_channel_RC, 0);
 
     rc_add_yaw_RC = yaw_channel_RC * YAW_RC_SEN;
     rc_add_pit_RC = -pitch_channel_RC * PITCH_RC_SEN;
@@ -501,18 +390,8 @@ static void gimbal_RC_control(fp32 *yaw, fp32 *pitch, gimbal_control_t *gimbal_c
     rc_add_yaw = -yaw_channel * YAW_MOUSE_SEN;
     rc_add_pit = pitch_channel * PITCH_MOUSE_SEN;
 
-
-    //导航行走时设置的低速模式
-    if (vision_rx->ang_z != 0)
-    {
-        *yaw = ((vision_rx->ang_z) * 0.000264f) * 1; // rc_add_yaw  +rc_add_yaw_RC *0.8;
-        *pitch = (rc_add_pit + rc_add_pit_RC) * 0.8;
-    }
-    else
-    {
-        *yaw = rc_add_yaw + rc_add_yaw_RC * 0.8;
-        *pitch = (rc_add_pit + rc_add_pit_RC) * 0.8;
-    }
+    *yaw = rc_add_yaw_RC + rc_add_yaw;
+    *pitch = rc_add_pit_RC + rc_add_pit;
 }
 
 /**
@@ -547,7 +426,7 @@ static void gimbal_auto_attack_control(fp32 *yaw, fp32 *pitch, gimbal_control_t 
 
     // 计算过去设定角度与当前角度之间的差值
     yaw_error = gimbal_control_set->gimbal_yaw_motor.absolute_angle_set - gimbal_control_set->gimbal_yaw_motor.absolute_angle;
-    pitch_error = gimbal_control_set->gimbal_pitch_motor.absolute_angle_set - gimbal_control_set->gimbal_pitch_motor.absolute_angle;
+    pitch_error = gimbal_control_set->DM_j4310.absolute_angle_set - gimbal_control_set->DM_j4310.absolute_angle;
     //  获取上位机视觉数据
     pitch_set_angle = gimbal_control_set->gimbal_vision_point->gimbal_pitch;
     yaw_set_angle = gimbal_control_set->gimbal_vision_point->gimbal_yaw;
@@ -560,7 +439,7 @@ static void gimbal_auto_attack_control(fp32 *yaw, fp32 *pitch, gimbal_control_t 
     else
     {
         *yaw = yaw_set_angle - gimbal_control_set->gimbal_yaw_motor.absolute_angle - yaw_error;
-        *pitch = pitch_set_angle - gimbal_control_set->gimbal_pitch_motor.absolute_angle - pitch_error;
+        *pitch = pitch_set_angle - gimbal_control_set->DM_j4310.absolute_angle - pitch_error;
     }
 }
 
@@ -592,7 +471,7 @@ static void gimbal_auto_scan_control(fp32 *yaw, fp32 *pitch, gimbal_control_t *g
     }
     // 计算过去设定角度与当前角度之间的差值
     yaw_error = gimbal_control_set->gimbal_yaw_motor.absolute_angle_set - gimbal_control_set->gimbal_yaw_motor.absolute_angle;
-    pitch_error = gimbal_control_set->gimbal_pitch_motor.absolute_angle_set - gimbal_control_set->gimbal_pitch_motor.absolute_angle;
+    pitch_error = gimbal_control_set->DM_j4310.absolute_angle_set - gimbal_control_set->DM_j4310.absolute_angle;
 
     // 自动扫描设置浮动值
     fp32 auto_scan_AC_set_yaw = 0;
@@ -615,7 +494,7 @@ static void gimbal_auto_scan_control(fp32 *yaw, fp32 *pitch, gimbal_control_t *g
 
     // 赋值增量
     *yaw = gimbal_control_set->gimbal_auto_scan.yaw_auto_scan_first_order_filter.out - gimbal_control_set->gimbal_yaw_motor.absolute_angle - yaw_error;
-    *pitch = gimbal_control_set->gimbal_auto_scan.pitch_auto_scan_first_order_filter.out - gimbal_control_set->gimbal_pitch_motor.absolute_angle - pitch_error;
+    *pitch = gimbal_control_set->gimbal_auto_scan.pitch_auto_scan_first_order_filter.out - gimbal_control_set->DM_j4310.absolute_angle - pitch_error;
 }
 
 /**
@@ -637,52 +516,52 @@ static void gimbal_auto_move_control(fp32 *yaw, fp32 *pitch, gimbal_control_t *g
 
     // 计算过去设定角度与当前角度之间的差值
     yaw_error = gimbal_control_set->gimbal_yaw_motor.absolute_angle_set - gimbal_control_set->gimbal_yaw_motor.absolute_angle;
-    pitch_error = gimbal_control_set->gimbal_pitch_motor.absolute_angle_set - gimbal_control_set->gimbal_pitch_motor.absolute_angle;
+    pitch_error = gimbal_control_set->DM_j4310.absolute_angle_set - gimbal_control_set->DM_j4310.absolute_angle;
     //  获取上位机视觉数据
     yaw_set_angle = gimbal_control_set->auto_move_point->command_yaw;
     pitch_set_angle = 0.0f;
 
     // 赋值增量
     *yaw = yaw_set_angle - gimbal_control_set->gimbal_yaw_motor.absolute_angle - yaw_error;
-    *pitch = pitch_set_angle - gimbal_control_set->gimbal_pitch_motor.absolute_angle - pitch_error;
+    *pitch = pitch_set_angle - gimbal_control_set->DM_j4310.absolute_angle - pitch_error;
 }
 
 /**
- * @brief          云台初始化控制，电机是陀螺仪角度控制，云台先抬起pitch轴，后旋转yaw轴
- */
-static void gimbal_init_control(fp32 *yaw, fp32 *pitch, gimbal_control_t *gimbal_control_set)
-{
-    if (yaw == NULL || pitch == NULL || gimbal_control_set == NULL)
-    {
-        return;
-    }
-    //    // 初始化状态控制量计算
-    //    if (fabs(INIT_PITCH_SET - gimbal_control_set->gimbal_pitch_motor.absolute_angle) > GIMBAL_INIT_ANGLE_ERROR) // pitch轴回正
-    //    {
-    //        *pitch = (INIT_PITCH_SET - gimbal_control_set->gimbal_pitch_motor.absolute_angle) * GIMBAL_INIT_PITCH_SPEED;
-    //        *yaw = 0.0f;
-    //    }
-    //    else // yaw轴回归初始值
-    //    {
-    //        static fp32 yaw_error = 0;
-    //        yaw_error = gimbal_control_set->gimbal_yaw_motor.absolute_angle_set - gimbal_control_set->gimbal_yaw_motor.absolute_angle;
-    //        // pitch轴保持不变yaw轴回归中值
-    //        *pitch = (INIT_PITCH_SET - gimbal_control_set->gimbal_pitch_motor.absolute_angle) * GIMBAL_INIT_PITCH_SPEED;
-    //        // yaw轴绝对角计算控制yaw轴正方向
-    //        *yaw = (gimbal_control_set->gimbal_yaw_motor.frist_ecd - gimbal_control_set->gimbal_yaw_motor.gimbal_motor_measure->ecd) * MOTOR_ECD_TO_RAD - yaw_error;
-    //    }
-    // 初始化状态控制量计算
-    if (fabs(INIT_PITCH_SET - gimbal_control_set->gimbal_pitch_motor.absolute_angle) > GIMBAL_INIT_ANGLE_ERROR)
-    {
-        *pitch = (INIT_PITCH_SET - gimbal_control_set->gimbal_pitch_motor.absolute_angle) * GIMBAL_INIT_PITCH_SPEED;
-        *yaw = 0.0f;
-    }
-    else
-    {
-        *pitch = (INIT_PITCH_SET - gimbal_control_set->gimbal_pitch_motor.absolute_angle) * GIMBAL_INIT_PITCH_SPEED;
-        *yaw = (INIT_YAW_SET - gimbal_control_set->gimbal_yaw_motor.relative_angle) * GIMBAL_INIT_YAW_SPEED;
-    }
-}
+// * @brief          云台初始化控制，电机是陀螺仪角度控制，云台先抬起pitch轴，后旋转yaw轴
+// */
+//static void gimbal_init_control(fp32 *yaw, fp32 *pitch, gimbal_control_t *gimbal_control_set)
+//{
+//    if (yaw == NULL || pitch == NULL || gimbal_control_set == NULL)
+//    {
+//        return;
+//    }
+//    //    // 初始化状态控制量计算
+//    //    if (fabs(INIT_PITCH_SET - gimbal_control_set->gimbal_pitch_motor.absolute_angle) > GIMBAL_INIT_ANGLE_ERROR) // pitch轴回正
+//    //    {
+//    //        *pitch = (INIT_PITCH_SET - gimbal_control_set->gimbal_pitch_motor.absolute_angle) * GIMBAL_INIT_PITCH_SPEED;
+//    //        *yaw = 0.0f;
+//    //    }
+//    //    else // yaw轴回归初始值
+//    //    {
+//    //        static fp32 yaw_error = 0;
+//    //        yaw_error = gimbal_control_set->gimbal_yaw_motor.absolute_angle_set - gimbal_control_set->gimbal_yaw_motor.absolute_angle;
+//    //        // pitch轴保持不变yaw轴回归中值
+//    //        *pitch = (INIT_PITCH_SET - gimbal_control_set->gimbal_pitch_motor.absolute_angle) * GIMBAL_INIT_PITCH_SPEED;
+//    //        // yaw轴绝对角计算控制yaw轴正方向
+//    //        *yaw = (gimbal_control_set->gimbal_yaw_motor.frist_ecd - gimbal_control_set->gimbal_yaw_motor.gimbal_motor_measure->ecd) * MOTOR_ECD_TO_RAD - yaw_error;
+//    //    }
+//    // 初始化状态控制量计算
+//    if (fabs(INIT_PITCH_SET - gimbal_control_set->DM_j4310.absolute_angle) > GIMBAL_INIT_ANGLE_ERROR)
+//    {
+//        *pitch = (INIT_PITCH_SET - gimbal_control_set->DM_j4310.absolute_angle) * GIMBAL_INIT_PITCH_SPEED;
+//        *yaw = 0.0f;
+//    }
+//    else
+//    {
+//        *pitch = (INIT_PITCH_SET - gimbal_control_set->DM_j4310.absolute_angle) * GIMBAL_INIT_PITCH_SPEED;
+//        *yaw = (INIT_YAW_SET - gimbal_control_set->gimbal_yaw_motor.relative_angle) * GIMBAL_INIT_YAW_SPEED;
+//    }
+//}
 
 void scan_control_set(fp32 *gimbal_set, fp32 range, fp32 period, fp32 run_time)
 {

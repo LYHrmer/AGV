@@ -100,7 +100,7 @@
 
 
 #define YAW_RC_SEN    -0.000005f
-#define PITCH_RC_SEN  0.000004f //0.0050.000005f
+#define PITCH_RC_SEN  0.000004f //0.000004f
 
 #define YAW_MOUSE_SEN   0.00005f
 #define PITCH_MOUSE_SEN 0.00006f
@@ -220,10 +220,11 @@
 #define PITCH_MIX_OUT -30000.0f
 
 //达妙电机初始化数据
+//#define Angle_Max 1.0f
 #define Angle_Max 12.5f
-#define Omega_Max 5.0f
-#define Torque_Max 5.0f
-#define Current_Max 5.0f
+#define Omega_Max 25.0f
+#define Torque_Max 10.0f
+#define Current_Max 10.0f
 
 //pitch轴绝对角度控制PID
 #define PITCH_ABSLOUTE_ANGLE_PID_KP                     0.02f
@@ -242,6 +243,7 @@ typedef enum
     GIMBAL_MOTOR_RAW = 0, //电机原始值控制
     GIMBAL_MOTOR_GYRO,    //电机陀螺仪角度控制
     GIMBAL_MOTOR_ENCONDE, //电机编码值角度控制
+		GIMBAL_MOTOR_INIT,
 } gimbal_motor_mode_e;
 
 
@@ -336,7 +338,7 @@ typedef struct
 	int frist_ecd;
 	int zero_ecd_flag;
 	int last_zero_ecd;
-	Motor_DM_Normal motor_j4310; //达喵4310
+	Motor_DM_Normal motor_j4310; //达妙4310
 	Enum_Motor_DM_Control_Method Motor_DM_Control_Method;
 } gimbal_motor_t;
 

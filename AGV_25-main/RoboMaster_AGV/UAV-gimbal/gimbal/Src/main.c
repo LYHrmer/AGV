@@ -143,7 +143,7 @@ int main(void)
     can_filter_init();
     delay_init();
     remote_control_init();
-vision_init();
+		vision_init();
     DWT_Init(168);
     while (BMI088_init(&hspi1, 0) != BMI088_NO_ERROR)
     {

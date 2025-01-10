@@ -144,6 +144,13 @@ static void gimbal_absolute_angle_limit(gimbal_motor_t *gimbal_motor, fp32 add);
 static void gimbal_relative_angle_limit(gimbal_motor_t *gimbal_motor, fp32 add);
 
 /**
+ * @brief          云台控制模式:GIMBAL_MOTOR_INIT
+ * @param[out]     gimbal_motor:yaw电机或者pitch电机
+ * @retval         none
+ */
+static void gimbal_motor_init_angle_control(gimbal_motor_t *gimbal_motor);
+
+/**
  * @brief 云台二阶线性控制器初始化
  * 
  * @param controller 云台二阶线性控制器结构体
@@ -166,6 +173,10 @@ static void gimbal_motor_second_order_linear_controller_init(gimbal_motor_second
  * @return 返回系统输入 即电机电流值 
  */
 static fp32 gimbal_motor_second_order_linear_controller_calc(gimbal_motor_second_order_linear_controller_t* controller, fp32 set_angle, fp32 cur_angle, fp32 cur_angle_speed, fp32 cur_current);
+
+//保持达妙电机存活
+void DM__keep_alive(gimbal_control_t *keep_alive);
+
 extern chassis_move_t chassis_move;
 //云台任务结构体
 gimbal_control_t gimbal_control;
@@ -194,11 +205,13 @@ void gimbal_task(void const *pvParameters)
       gimbal_feedback_update(&gimbal_control);             // 云台数据反馈
       gimbal_set_control(&gimbal_control);                 // 设置云台控制量
       gimbal_control_loop(&gimbal_control);                // 云台控制计算
+			DM__keep_alive(&gimbal_control); 
 //    if (toe_is_error(DBUS_TOE)){
 //    // 判断遥控器是否掉线
 //    CAN_cmd_gimbal(0, 0);   Motor_DM_Normal_CAN_Send_Disable(&gimbal_control.DM_j4310.motor_j4310); //失能}
 //    else
 //    {
+//			Motor_DM_Normal_CAN_Send_Enable(&gimbal_control.DM_j4310.motor_j4310);
 		  CAN_cmd_gimbal(gimbal_control.gimbal_yaw_motor.given_current,0);
 		  Motor_DM_Normal_TIM_Send_PeriodElapsedCallback(&gimbal_control.DM_j4310.motor_j4310);
 //    }
@@ -238,7 +251,7 @@ const gimbal_motor_t *get_pitch_motor_point(void)
  */
 static void gimbal_init(gimbal_control_t *init)
 {
-		const static fp32 pitch_increment_error_pid[3] = {1.0, 0.0, 0.1}; //内置PID自稳云台
+		const static fp32 pitch_increment_error_pid[3] = {0.8, 0.0, 0.01}; //内置PID自稳云台
 		
     const static fp32 gimbal_yaw_auto_scan_order_filter[1] = {GIMBAL_YAW_AUTO_SCAN_NUM};
     const static fp32 gimbal_pitch_auto_scan_order_filter[1] = {GIMBAL_PITCH_AUTO_SCAN_NUM};
@@ -285,16 +298,16 @@ static void gimbal_init(gimbal_control_t *init)
     init->DM_j4310.motor_gyro_set = init->DM_j4310.motor_gyro;
 		
     //达妙电机初始化
-		Motor_DM_Normal_CAN_Send_Enable(&gimbal_control.DM_j4310.motor_j4310);   //达妙电机使能
-		gimbal_control.DM_j4310.Motor_DM_Control_Method = Motor_DM_Control_Method_NORMAL_MIT; //达妙电机模式设置
-		Motor_DM_Normal_Init(&gimbal_control.DM_j4310.motor_j4310,&hcan1,
+		Motor_DM_Normal_CAN_Send_Enable(&init->DM_j4310.motor_j4310);   //达妙电机使能
+		init->DM_j4310.Motor_DM_Control_Method = Motor_DM_Control_Method_NORMAL_MIT; //达妙电机模式设置
+		Motor_DM_Normal_Init(&init->DM_j4310.motor_j4310,&hcan1,
 	                     0x11,0x01,Motor_DM_Control_Method_NORMAL_MIT,
 	                     Angle_Max,Omega_Max,Torque_Max,Current_Max); //达妙电机初始化
-		gimbal_control.DM_j4310.motor_j4310.Control_Angle = 0;
-		gimbal_control.DM_j4310.motor_j4310.Control_Omega = 0.0f;
-		gimbal_control.DM_j4310.motor_j4310.Control_Current = 0.0f;
-		gimbal_control.DM_j4310.motor_j4310.K_P = 40.0f;
-		gimbal_control.DM_j4310.motor_j4310.K_D = 1.0f;
+//		init->DM_j4310.motor_j4310.Control_Angle = 0;
+		init->DM_j4310.motor_j4310.Control_Omega = 0.0f;
+		init->DM_j4310.motor_j4310.Control_Current = 0.0f;
+		init->DM_j4310.motor_j4310.K_P = 40.0f;
+		init->DM_j4310.motor_j4310.K_D = 1.0f;
 		
      //初始化云台自动扫描低通滤波
     first_order_filter_init(&init->gimbal_auto_scan.pitch_auto_scan_first_order_filter, GIMBAL_CONTROL_TIME, gimbal_pitch_auto_scan_order_filter);
@@ -316,8 +329,8 @@ static void gimbal_init(gimbal_control_t *init)
     // 设置pitch轴相对角最大值
     init->DM_j4310.max_relative_angle = motor_ecd_to_angle_change(GIMBAL_PITCH_MAX_ENCODE, init->DM_j4310.offset_ecd);
     init->DM_j4310.min_relative_angle = motor_ecd_to_angle_change(GIMBAL_PITCH_MIN_ENCODE, init->DM_j4310.offset_ecd);
-    init->DM_j4310.max_absolute_angle = PI/4;
-    init->DM_j4310.min_absolute_angle = -PI/4;
+    init->DM_j4310.max_absolute_angle = PI /6;
+    init->DM_j4310.min_absolute_angle = -PI /6;
 		
 		//pitch轴绝对角度控制PID初始化
     PID_UP_Init(&init->DM_j4310.Absloute_Angle_PID,PITCH_ABSLOUTE_ANGLE_PID_KP, PITCH_ABSLOUTE_ANGLE_PID_KI, PITCH_ABSLOUTE_ANGLE_PID_KD, 
@@ -422,20 +435,24 @@ static void gimbal_mode_change_control_transit(gimbal_control_t *gimbal_mode_cha
     gimbal_mode_change->gimbal_yaw_motor.last_gimbal_motor_mode = gimbal_mode_change->gimbal_yaw_motor.gimbal_motor_mode;
 
     // pitch电机状态机切换保存数据
-    if (gimbal_mode_change->gimbal_pitch_motor.last_gimbal_motor_mode != GIMBAL_MOTOR_RAW && gimbal_mode_change->gimbal_pitch_motor.gimbal_motor_mode == GIMBAL_MOTOR_RAW)
+		if (gimbal_mode_change->DM_j4310.last_gimbal_motor_mode != GIMBAL_MOTOR_INIT && gimbal_mode_change->DM_j4310.gimbal_motor_mode == GIMBAL_MOTOR_INIT)
+		{
+				gimbal_mode_change->DM_j4310.motor_j4310.Control_Angle = 0.0f;
+		}
+    if (gimbal_mode_change->DM_j4310.last_gimbal_motor_mode != GIMBAL_MOTOR_RAW && gimbal_mode_change->DM_j4310.gimbal_motor_mode == GIMBAL_MOTOR_RAW)
     {
-        gimbal_mode_change->gimbal_pitch_motor.raw_cmd_current = gimbal_mode_change->gimbal_pitch_motor.current_set = gimbal_mode_change->gimbal_pitch_motor.given_current;
+        gimbal_mode_change->DM_j4310.raw_cmd_current = gimbal_mode_change->DM_j4310.current_set = gimbal_mode_change->DM_j4310.given_current;
     }
-    else if (gimbal_mode_change->gimbal_pitch_motor.last_gimbal_motor_mode != GIMBAL_MOTOR_GYRO && gimbal_mode_change->gimbal_pitch_motor.gimbal_motor_mode == GIMBAL_MOTOR_GYRO)
+    else if (gimbal_mode_change->DM_j4310.last_gimbal_motor_mode != GIMBAL_MOTOR_GYRO && gimbal_mode_change->DM_j4310.gimbal_motor_mode == GIMBAL_MOTOR_GYRO)
     {
-        gimbal_mode_change->gimbal_pitch_motor.absolute_angle_set = gimbal_mode_change->gimbal_pitch_motor.absolute_angle;
+        gimbal_mode_change->DM_j4310.absolute_angle_set = gimbal_mode_change->DM_j4310.absolute_angle;
     }
-    else if (gimbal_mode_change->gimbal_pitch_motor.last_gimbal_motor_mode != GIMBAL_MOTOR_ENCONDE && gimbal_mode_change->gimbal_pitch_motor.gimbal_motor_mode == GIMBAL_MOTOR_ENCONDE)
+    else if (gimbal_mode_change->DM_j4310.last_gimbal_motor_mode != GIMBAL_MOTOR_ENCONDE && gimbal_mode_change->DM_j4310.gimbal_motor_mode == GIMBAL_MOTOR_ENCONDE)
     {
-        gimbal_mode_change->gimbal_pitch_motor.relative_angle_set = gimbal_mode_change->gimbal_pitch_motor.relative_angle;
+        gimbal_mode_change->DM_j4310.relative_angle_set = gimbal_mode_change->DM_j4310.relative_angle;
     }
 
-    gimbal_mode_change->gimbal_pitch_motor.last_gimbal_motor_mode = gimbal_mode_change->gimbal_pitch_motor.gimbal_motor_mode;
+    gimbal_mode_change->DM_j4310.last_gimbal_motor_mode = gimbal_mode_change->DM_j4310.gimbal_motor_mode;
 }
 /**
  * @brief          set gimbal control set-point, control set-point is set by "gimbal_behaviour_control_set".
@@ -476,20 +493,15 @@ static void gimbal_set_control(gimbal_control_t *set_control)
     }
 
     // pitch电机模式控制
-    if (set_control->gimbal_pitch_motor.gimbal_motor_mode == GIMBAL_MOTOR_RAW)
+    if (set_control->DM_j4310.gimbal_motor_mode == GIMBAL_MOTOR_RAW)
     {
         // raw模式下，直接发送控制值
-        set_control->gimbal_pitch_motor.raw_cmd_current = add_pitch_angle;
+        set_control->DM_j4310.raw_cmd_current = add_pitch_angle;
     }
-    else if (set_control->gimbal_pitch_motor.gimbal_motor_mode == GIMBAL_MOTOR_GYRO)
+    else if (set_control->DM_j4310.gimbal_motor_mode == GIMBAL_MOTOR_GYRO)
     {
         // gyro模式下，陀螺仪角度控制
-        gimbal_absolute_angle_limit(&set_control->gimbal_pitch_motor, add_pitch_angle);
-    }
-    else if (set_control->gimbal_pitch_motor.gimbal_motor_mode == GIMBAL_MOTOR_ENCONDE)
-    {
-        // enconde模式下，电机编码角度控制
-        gimbal_relative_angle_limit(&set_control->gimbal_pitch_motor, add_pitch_angle);
+        gimbal_absolute_angle_limit(&set_control->DM_j4310, add_pitch_angle);
     }
 }
 /**
@@ -515,31 +527,42 @@ static void gimbal_absolute_angle_limit(gimbal_motor_t *gimbal_motor, fp32 add)
         angle_set_yaw = gimbal_motor->absolute_angle_set;
         gimbal_motor->absolute_angle_set = rad_format(angle_set_yaw + add);
     }
-    else
+    else if (gimbal_motor == &gimbal_control.DM_j4310)
     {
         // 当前误差角度
-        static fp32 error_angle = 0;
-        static fp32 angle_set = 0;
-        error_angle = rad_format(gimbal_motor->absolute_angle_set - gimbal_motor->absolute_angle);
-        // 云台相对角度+ 误差角度 + 新增角度 如果大于 最大机械角度
-        if (gimbal_motor->relative_angle + error_angle + add < gimbal_motor->max_relative_angle)
-        {
-            // 如果是往最大机械角度控制方向
-            if (add < 0.0f)
-            {
-                // 计算出一个最大的添加角度，
-                add = gimbal_motor->max_relative_angle - gimbal_motor->relative_angle - error_angle;
-            }
-        }
-        else if (gimbal_motor->relative_angle + error_angle + add > gimbal_motor->min_relative_angle)
-        {
-            if (add > 0.0f)
-            {
-                add = gimbal_motor->min_relative_angle - gimbal_motor->relative_angle - error_angle;
-            }
-        }
-        angle_set = gimbal_motor->absolute_angle_set;
-        gimbal_motor->absolute_angle_set = rad_format(angle_set + add);
+//        static fp32 error_angle = 0;
+//        static fp32 angle_set = 0;	
+//        error_angle = rad_format(gimbal_motor->absolute_angle_set - gimbal_motor->absolute_angle);
+//        // 云台相对角度+ 误差角度 + 新增角度 如果大于 最大机械角度
+//        if (gimbal_motor->absolute_angle + error_angle + add < gimbal_motor->max_absolute_angle)
+//        {
+//            // 如果是往最大机械角度控制方向
+//            if (add < 0.0f)
+//            {
+//                // 计算出一个最大的添加角度，
+//                add = gimbal_motor->max_absolute_angle - gimbal_motor->absolute_angle - error_angle;
+//            }
+//        }
+//        else if (gimbal_motor->absolute_angle + error_angle + add > gimbal_motor->min_absolute_angle)
+//        {
+//            if (add > 0.0f)
+//            {
+//                add = gimbal_motor->min_absolute_angle - gimbal_motor->absolute_angle - error_angle;
+//            }
+//        }
+
+    static fp32 angle_set = 0;
+		angle_set = gimbal_motor->absolute_angle_set;		
+    gimbal_motor->absolute_angle_set = angle_set + add;
+		if(gimbal_motor->absolute_angle_set > gimbal_motor->max_absolute_angle)
+		{
+			gimbal_motor->absolute_angle_set = gimbal_motor->max_absolute_angle;
+		}
+		if(gimbal_motor->absolute_angle_set < gimbal_motor->min_absolute_angle)
+		{
+			gimbal_motor->absolute_angle_set = gimbal_motor->min_absolute_angle;
+		}
+		
     }
 }
 /**
@@ -573,7 +596,7 @@ static void gimbal_relative_angle_limit(gimbal_motor_t *gimbal_motor, fp32 add)
             gimbal_motor->relative_angle_set = gimbal_motor->relative_angle_set - 2 * PI;
         }
     }
-    else if (gimbal_motor == &gimbal_control.gimbal_pitch_motor)
+    else if (gimbal_motor == &gimbal_control.DM_j4310)
     {
         // 云台pitch轴相对角度限制，防止pitch轴转动过度
         if (gimbal_motor->relative_angle_set >= motor_ecd_to_angle_change(GIMBAL_PITCH_MAX_ENCODE, gimbal_motor->offset_ecd))
@@ -612,17 +635,21 @@ static void gimbal_control_loop(gimbal_control_t *control_loop)
         gimbal_motor_relative_angle_control(&control_loop->gimbal_yaw_motor);
     }
 
-    if (control_loop->gimbal_pitch_motor.gimbal_motor_mode == GIMBAL_MOTOR_RAW)
+    if (control_loop->DM_j4310.gimbal_motor_mode == GIMBAL_MOTOR_INIT)
+		{
+				gimbal_motor_init_angle_control(&control_loop->DM_j4310);
+		}
+    else if (control_loop->DM_j4310.gimbal_motor_mode == GIMBAL_MOTOR_RAW)
     {
-        gimbal_motor_raw_angle_control(&control_loop->gimbal_pitch_motor);
+        gimbal_motor_raw_angle_control(&control_loop->DM_j4310);
     }
-    else if (control_loop->gimbal_pitch_motor.gimbal_motor_mode == GIMBAL_MOTOR_GYRO)
+    else if (control_loop->DM_j4310.gimbal_motor_mode == GIMBAL_MOTOR_GYRO)
     {
-        gimbal_motor_absolute_angle_control(&control_loop->gimbal_pitch_motor);
+        gimbal_motor_absolute_angle_control(&control_loop->DM_j4310);
     }
-    else if (control_loop->gimbal_pitch_motor.gimbal_motor_mode == GIMBAL_MOTOR_ENCONDE)
+    else if (control_loop->DM_j4310.gimbal_motor_mode == GIMBAL_MOTOR_ENCONDE)
     {
-        gimbal_motor_relative_angle_control(&control_loop->gimbal_pitch_motor);
+        gimbal_motor_relative_angle_control(&control_loop->DM_j4310);
     }
 }
 
@@ -637,11 +664,28 @@ static void gimbal_motor_absolute_angle_control(gimbal_motor_t *gimbal_motor)
     {
         return;
     }
-    //计算云台电机控制电流
+		if (gimbal_motor == &gimbal_control.gimbal_yaw_motor)
+    {
+		//计算云台电机控制电流
     gimbal_motor->current_set = gimbal_motor_second_order_linear_controller_calc(&gimbal_motor->gimbal_motor_second_order_linear_controller, gimbal_motor->absolute_angle_set, gimbal_motor->absolute_angle, gimbal_motor->motor_gyro, gimbal_motor->gimbal_motor_measure->given_current);
     //赋值电流值
     gimbal_motor->given_current = (int16_t)(gimbal_motor->current_set);
-
+		}
+		else
+		{
+		//计算绝对角度控制
+	  gimbal_motor->Absloute_Angle_PID.Target = gimbal_motor->absolute_angle_set;
+    gimbal_motor->Absloute_Angle_PID.Now = gimbal_motor->absolute_angle;
+    PID_TIM_Adjust_PeriodElapsedCallback(&gimbal_motor->Absloute_Angle_PID);
+    if(gimbal_motor->motor_j4310.Rx_Data.Now_Angle>1 && gimbal_motor->motor_j4310.Control_Angle>1 &&gimbal_motor->absolute_angle_set>1)
+			gimbal_motor->motor_j4310.Control_Angle = 1;
+		else if(gimbal_motor->motor_j4310.Rx_Data.Now_Angle<-1 && gimbal_motor->motor_j4310.Control_Angle<-1 &&gimbal_motor->absolute_angle_set<-1)
+			gimbal_motor->motor_j4310.Control_Angle = -1;
+		else
+			gimbal_motor->motor_j4310.Control_Angle -= gimbal_motor->Absloute_Angle_PID.Out;
+   // gimbal_motor->motor_j4310.Control_Angle += gimbal_motor->absolute_angle_set - gimbal_motor->absolute_angle;
+    Motor_DM_Normal_TIM_Send_PeriodElapsedCallback(&gimbal_motor->motor_j4310);
+		}
 }
 /**
  * @brief          云台控制模式:GIMBAL_MOTOR_ENCONDE，使用编码相对角进行控制
@@ -658,8 +702,6 @@ static void gimbal_motor_relative_angle_control(gimbal_motor_t *gimbal_motor)
     gimbal_motor->current_set = gimbal_motor_second_order_linear_controller_calc(&gimbal_motor->gimbal_motor_second_order_linear_controller, gimbal_motor->relative_angle_set, gimbal_motor->relative_angle, gimbal_motor->gimbal_motor_measure->speed_rpm, gimbal_motor->gimbal_motor_measure->given_current);
     //赋值电流值
     gimbal_motor->given_current = (int16_t)(gimbal_motor->current_set);
-//		stm32_step_pitch(gimbal_motor->relative_angle_set,gimbal_motor->relative_angle,0);
-//		gimbal_motor->given_current = stm32_Y_pitch.Out1;
 }
 
 /**
@@ -677,7 +719,10 @@ static void gimbal_motor_raw_angle_control(gimbal_motor_t *gimbal_motor)
     gimbal_motor->given_current = (int16_t)(gimbal_motor->current_set);
 }
 
-
+static void gimbal_motor_init_angle_control(gimbal_motor_t *gimbal_motor)
+{
+	Motor_DM_Normal_TIM_Send_PeriodElapsedCallback(&gimbal_motor->motor_j4310);
+}
 /**
  * @brief 云台二阶线性控制器初始化
  *
@@ -745,3 +790,21 @@ fp32 get_yaw_positive_direction(void)
     return gimbal_control.yaw_positive_direction;
 }
 
+void DM__keep_alive(gimbal_control_t *keep_alive)
+{
+	if(keep_alive->DM_j4310.gimbal_motor_mode == GIMBAL_ZERO_FORCE)
+	{
+		Motor_DM_Normal_CAN_Send_Disable(&keep_alive->DM_j4310.motor_j4310);
+	}
+	else
+	{
+		static uint32_t Counter_KeepAlive = 0;
+		if (Counter_KeepAlive++ > 100)
+		{
+			Counter_KeepAlive = 0;
+			
+			Motor_DM_Normal_TIM_Alive_PeriodElapsedCallback(&keep_alive->DM_j4310.motor_j4310);
+		}
+	}
+
+}
