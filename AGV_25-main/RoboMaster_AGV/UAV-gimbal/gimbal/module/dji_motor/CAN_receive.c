@@ -194,183 +194,9 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
         CAN2_Manage_Object.Callback_Function(&CAN2_Manage_Object.Rx_Buffer);
     }
 			CAN_RxHeaderTypeDef rx_header;
-		uint8_t rx_data[8];
-	HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data);
-		if (hcan == &hcan1)
-		{
-		switch (rx_header.StdId)
-			{
-		case CAN_YAW_MOTOR_ID:
-			{
 
-				get_motor_measure(&motor_chassis[4], rx_data);
-				break;
-			}
-      case cap_voltage_ID:
-			{
-				Cap_Voltage =(((int32_t)(rx_data[0]) << 8) | (int32_t)(rx_data[1]));   //超电输入电压
-				cur_output = (((int32_t)(rx_data[2]) << 8) | (int32_t)(rx_data[3]));   //
-			}
-			default:
-			{
-				break;
-			}
-		}
 	}
-	else if (hcan == &hcan2)
-  {
-		HAL_CAN_GetRxMessage(hcan, CAN_FILTER_FIFO0, &CAN2_Manage_Object.Rx_Buffer.Header, CAN2_Manage_Object.Rx_Buffer.Data);
-    CAN2_Manage_Object.Callback_Function(&CAN2_Manage_Object.Rx_Buffer);
-    switch (rx_header.StdId)
-    {
-    case CAN_TRIGGER_MOTOR_ID:
-    {
-      get_motor_measure(&motor_tri, rx_data);
-      detect_hook(TRIGGER_MOTOR_TOE);
-      break;
-    }
-    case CAN_3508_S1_ID:
-    {
-      get_motor_measure(&motor_shoot[rx_header.StdId - CAN_3508_S1_ID], rx_data);
-      detect_hook(FRIC_LEFT_MOTOR_TOE);
-      break;
-    }
-    case CAN_3508_S2_ID:
-    {
-      get_motor_measure(&motor_shoot[rx_header.StdId - CAN_3508_S1_ID], rx_data);
-      detect_hook(FRIC_RIGHT_MOTOR_TOE);
-      break;
-    }
-    default:
-    {
-      break;
-    }
-    }
-  }
-}
 
-/**
- * @brief HAL库CAN接收FIFO1中断
- *
- * @param hcan CAN编号
- */
-//void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan)
-//{
-//    //选择回调函数
-//    if (hcan->Instance == CAN1)
-//    {
-//        HAL_CAN_GetRxMessage(hcan, CAN_FILTER_FIFO1, &CAN1_Manage_Object.Rx_Buffer.Header, CAN1_Manage_Object.Rx_Buffer.Data);
-//        CAN1_Manage_Object.Callback_Function(&CAN1_Manage_Object.Rx_Buffer);
-//    }
-//    else if (hcan->Instance == CAN2)
-//    {
-//        HAL_CAN_GetRxMessage(hcan, CAN_FILTER_FIFO1, &CAN2_Manage_Object.Rx_Buffer.Header, CAN2_Manage_Object.Rx_Buffer.Data);
-//        CAN2_Manage_Object.Callback_Function(&CAN2_Manage_Object.Rx_Buffer);
-//    }
-//}
-/**
- * @brief          hal CAN fifo call back, receive motor data
- * @param[in]      hcan, the point to CAN handle
- * @retval         none
- */
-/**
- * @brief          hal库CAN回调函数,接收电机数据
- * @param[in]      hcan:CAN句柄指针
- * @retval         none
- */
-//void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
-//{
-//	
-//	//    //选择回调函数
-//    if (hcan->Instance == CAN1)
-//    {
-//        HAL_CAN_GetRxMessage(hcan, CAN_FILTER_FIFO0, &CAN1_Manage_Object.Rx_Buffer.Header, CAN1_Manage_Object.Rx_Buffer.Data);
-//        CAN1_Manage_Object.Callback_Function(&CAN1_Manage_Object.Rx_Buffer);
-//    }
-//    else if (hcan->Instance == CAN2)
-//    {
-//        HAL_CAN_GetRxMessage(hcan, CAN_FILTER_FIFO0, &CAN2_Manage_Object.Rx_Buffer.Header, CAN2_Manage_Object.Rx_Buffer.Data);
-//        CAN2_Manage_Object.Callback_Function(&CAN2_Manage_Object.Rx_Buffer);
-//    }
-	
-	
-//		CAN_RxHeaderTypeDef rx_header;
-//		uint8_t rx_data[8];
-//	
-//		HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data);
-	
-
-		
-//		if (hcan == &hcan1)
-//		{
-
-//			switch (rx_header.StdId)
-//			{
-//			case (0x11):
-//			{
-//				for(int i=0;i<8;i++)
-//				{
-//				CAN1_Manage_Object.Rx_Buffer.Data[i] = rx_data[i];
-//				}
-//				Motor_DM_Normal_CAN_RxCpltCallback(&gimbal_control.DM_j4310.motor_j4310,CAN1_Manage_Object.Rx_Buffer.Data);
-////				Motor_DM_Normal_CAN_RxCpltCallback(&gimbal_control.DM_j4310.motor_j4310,rx_data);
-//				break;
-//			}
-//			case CAN_YAW_MOTOR_ID:
-//			{
-
-//				get_motor_measure(&motor_chassis[4], rx_data);
-//				detect_hook(YAW_GIMBAL_MOTOR_TOE);
-//				break;
-//			}
-//			case CAN_PIT_MOTOR_ID:
-//			{
-//				get_motor_measure(&motor_chassis[5], rx_data);
-//				detect_hook(PITCH_GIMBAL_MOTOR_TOE);
-//				break;
-//			}
-//			case cap_voltage_ID:
-//			{
-//				Cap_Voltage =(((int32_t)(rx_data[0]) << 8) | (int32_t)(rx_data[1]));   //超电输入电压
-//				cur_output = (((int32_t)(rx_data[2]) << 8) | (int32_t)(rx_data[3]));   //
-//			}
-//			default:
-//			{
-//				break;
-//			}
-//    }
-//  }
-//  else if (hcan == &hcan2)
-//  {
-//		HAL_CAN_GetRxMessage(hcan, CAN_FILTER_FIFO0, &CAN2_Manage_Object.Rx_Buffer.Header, CAN2_Manage_Object.Rx_Buffer.Data);
-//    CAN2_Manage_Object.Callback_Function(&CAN2_Manage_Object.Rx_Buffer);
-//    switch (rx_header.StdId)
-//    {
-//    case CAN_TRIGGER_MOTOR_ID:
-//    {
-//      get_motor_measure(&motor_tri, rx_data);
-//      detect_hook(TRIGGER_MOTOR_TOE);
-//      break;
-//    }
-//    case CAN_3508_S1_ID:
-//    {
-//      get_motor_measure(&motor_shoot[rx_header.StdId - CAN_3508_S1_ID], rx_data);
-//      detect_hook(FRIC_LEFT_MOTOR_TOE);
-//      break;
-//    }
-//    case CAN_3508_S2_ID:
-//    {
-//      get_motor_measure(&motor_shoot[rx_header.StdId - CAN_3508_S1_ID], rx_data);
-//      detect_hook(FRIC_RIGHT_MOTOR_TOE);
-//      break;
-//    }
-//    default:
-//    {
-//      break;
-//    }
-//    }
-//  }
-//}
 
 void CAN_Motor_Call_Back(Struct_CAN_Rx_Buffer *Rx_Buffer)
 {
@@ -382,15 +208,53 @@ void CAN_Motor_Call_Back(Struct_CAN_Rx_Buffer *Rx_Buffer)
             Motor_DM_Normal_CAN_RxCpltCallback(&gimbal_control.DM_j4310.motor_j4310,Rx_Buffer->Data);
 			break;
         }
-//					case CAN_YAW_MOTOR_ID:
-//			{
+		case CAN_YAW_MOTOR_ID:
+			{
 
-//				get_motor_measure(&motor_chassis[4], Rx_Buffer->Data);
-//				break;
-//			}
+				get_motor_measure(&motor_chassis[4], Rx_Buffer->Data);
+				break;
+			}
+      case cap_voltage_ID:
+			{
+				Cap_Voltage =(((int32_t)(Rx_Buffer->Data[0]) << 8) | (int32_t)(Rx_Buffer->Data[1]));   //超电输入电压
+				cur_output = (((int32_t)(Rx_Buffer->Data[2]) << 8) | (int32_t)(Rx_Buffer->Data[3]));   //
+			}
+			default:
+			{
+				break;
+			}
     }
 }
 
+void CAN2_Motor_Call_Back(Struct_CAN_Rx_Buffer *Rx_Buffer)
+{
+    switch (Rx_Buffer->Header.StdId)
+    {
+			
+    case CAN_TRIGGER_MOTOR_ID:
+    {
+      get_motor_measure(&motor_tri, Rx_Buffer->Data);
+			detect_hook(TRIGGER_MOTOR_TOE);
+      break;
+    }
+    case CAN_3508_S1_ID:
+    {
+      get_motor_measure(&motor_shoot[Rx_Buffer->Header.StdId - CAN_3508_S1_ID], Rx_Buffer->Data);
+			detect_hook(FRIC_LEFT_MOTOR_TOE);
+      break;
+    }
+    case CAN_3508_S2_ID:
+    {
+      get_motor_measure(&motor_shoot[Rx_Buffer->Header.StdId - CAN_3508_S1_ID], Rx_Buffer->Data);
+			detect_hook(FRIC_RIGHT_MOTOR_TOE);
+      break;
+    }
+    default:
+    {
+      break;
+    }
+    }
+}
 void CAN_cmd_shoot(int16_t fric1, int16_t fric2, int16_t shoot, int16_t rev)
 {
   uint32_t send_mail_box;

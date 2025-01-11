@@ -117,14 +117,15 @@ void shoot_task(void const *pvParameters)
 		Shoot_Set_Mode();
 		Shoot_Feedback_Update();
 		shoot_control_loop();
-		if (toe_is_error(DBUS_TOE) || robot_state.current_HP == 0)
+		if (toe_is_error(DBUS_TOE))
 		{
 			// Ò£¿ØÆ÷±¨´í£¬Í£Ö¹ÔËÐÐ
 			CAN_cmd_shoot(0, 0, 0, 0);
 		}
 		else
 			CAN_cmd_shoot(fric_move.fric_CAN_Set_Current[0], fric_move.fric_CAN_Set_Current[1], trigger_motor.given_current, 0);
-		CAN_cmd_shoot(10000, 10000, 10000, 0);
+
+
 		vTaskDelay(1);
 	}
 }

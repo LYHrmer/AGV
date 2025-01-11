@@ -29,7 +29,7 @@
 extern int32_t cur_output;
 // #define GIMBAL_CAN hcan1
 
-// /* CAN send and receive ID */
+ /* CAN send and receive ID */
 // typedef enum
 // {
 //     CAN_CHASSIS_ALL_ID = 0x200,
@@ -335,7 +335,7 @@ extern uint8_t CAN2_0x4fe_Tx_Data[];
 extern uint8_t CAN_Supercap_Tx_Data[];
 
 extern void CAN_Motor_Call_Back(Struct_CAN_Rx_Buffer *Rx_Buffer);
-
+extern void CAN2_Motor_Call_Back(Struct_CAN_Rx_Buffer *Rx_Buffer);
 void CAN_Init(CAN_HandleTypeDef *hcan, CAN_Call_Back Callback_Function);
 void CAN_Filter_Mask_Config(CAN_HandleTypeDef *hcan, uint8_t Object_Para, uint32_t ID, uint32_t Mask_ID);
 

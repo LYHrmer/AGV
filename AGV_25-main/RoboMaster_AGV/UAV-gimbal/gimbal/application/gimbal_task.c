@@ -206,15 +206,16 @@ void gimbal_task(void const *pvParameters)
       gimbal_set_control(&gimbal_control);                 // 设置云台控制量
       gimbal_control_loop(&gimbal_control);                // 云台控制计算
 			DM__keep_alive(&gimbal_control); 
-//    if (toe_is_error(DBUS_TOE)){
-//    // 判断遥控器是否掉线
-//    CAN_cmd_gimbal(0, 0);   Motor_DM_Normal_CAN_Send_Disable(&gimbal_control.DM_j4310.motor_j4310); //失能}
-//    else
-//    {
+    if (toe_is_error(DBUS_TOE))
+    // 判断遥控器是否掉线
+    CAN_cmd_gimbal(0, 0);   
+			//Motor_DM_Normal_CAN_Send_Disable(&gimbal_control.DM_j4310.motor_j4310); //失能}
+    else
+    {
 //			Motor_DM_Normal_CAN_Send_Enable(&gimbal_control.DM_j4310.motor_j4310);
 		  CAN_cmd_gimbal(gimbal_control.gimbal_yaw_motor.given_current,0);
 		  Motor_DM_Normal_TIM_Send_PeriodElapsedCallback(&gimbal_control.DM_j4310.motor_j4310);
-//    }
+    }
       vTaskDelay(1);
 //#if INCLUDE_uxTaskGetStackHighWaterMark
 //            gimbal_high_water = uxTaskGetStackHighWaterMark(NULL);
@@ -268,10 +269,10 @@ static void gimbal_init(gimbal_control_t *init)
     init->gimbal_INS_point = get_INS_point();
     // 遥控器数据指针获取
     init->gimbal_rc_ctrl = get_remote_control_point();
-    // 获取上位机视觉数据指针
-    init->gimbal_vision_point = get_vision_gimbal_point();
-    // 获取自动移动结构体
-    init->auto_move_point = get_auto_move_point();
+//    // 获取上位机视觉数据指针
+//    init->gimbal_vision_point = get_vision_gimbal_point();
+//    // 获取自动移动结构体
+//    init->auto_move_point = get_auto_move_point();
     // 初始化电机模式
     init->gimbal_yaw_motor.gimbal_motor_mode = init->gimbal_yaw_motor.last_gimbal_motor_mode = GIMBAL_MOTOR_RAW;
     init->DM_j4310.gimbal_motor_mode = init->DM_j4310.last_gimbal_motor_mode = GIMBAL_MOTOR_RAW;

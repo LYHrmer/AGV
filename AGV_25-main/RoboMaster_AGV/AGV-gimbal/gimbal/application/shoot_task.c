@@ -117,14 +117,14 @@ void shoot_task(void const *pvParameters)
 		Shoot_Set_Mode();
 		Shoot_Feedback_Update();
 		shoot_control_loop();
-		if (toe_is_error(DBUS_TOE) || robot_state.current_HP == 0)
+		if (toe_is_error(DBUS_TOE) )
 		{
 			// 遥控器报错，停止运行
 			CAN_cmd_shoot(0, 0, 0, 0);
 		}
 		else
 			CAN_cmd_shoot(fric_move.fric_CAN_Set_Current[0], fric_move.fric_CAN_Set_Current[1], trigger_motor.given_current, 0);
-		CAN_cmd_shoot(10000, 10000, 10000, 0);
+
 		vTaskDelay(1);
 	}
 }
@@ -293,24 +293,24 @@ static void Shoot_Set_Mode(void)
 	pills_cover();
 	shoot_ready();
 	// 是否允许拨弹
-	if (Ready_Flag == 1)
-	{
-		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_11, GPIO_PIN_SET);
+//	if (Ready_Flag == 1)
+//	{
+//		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_11, GPIO_PIN_SET);
 		shoot_mode = SHOOT_READY;
-	}
-	else
-	{
-		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_11, GPIO_PIN_RESET);
-		shoot_mode = SHOOT_STOP;
-		last_fric_mode = SHOOT_STOP;
-	}
+//	}
+//	else
+//	{
+//		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_11, GPIO_PIN_RESET);
+//		shoot_mode = SHOOT_STOP;
+//		last_fric_mode = SHOOT_STOP;
+//	}
 
-	if (last_fric_mode != shoot_mode)
-	{
-		// 模式发生切换,pid清除
-		stm32_step_shoot_pid_clear();
-	}
-	last_fric_mode = shoot_mode;
+//	if (last_fric_mode != shoot_mode)
+//	{
+//		// 模式发生切换,pid清除
+//		stm32_step_shoot_pid_clear();
+//	}
+//	last_fric_mode = shoot_mode;
 }
 /**
  * @brief          拨弹轮循环

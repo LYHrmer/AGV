@@ -140,6 +140,7 @@ int main(void)
     /* USER CODE BEGIN 2 */
     MX_USB_DEVICE_Init();
 		CAN_Init(&hcan1, CAN_Motor_Call_Back);
+		CAN_Init(&hcan2, CAN2_Motor_Call_Back);
     can_filter_init();
     delay_init();
     remote_control_init();
