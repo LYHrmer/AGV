@@ -217,9 +217,9 @@ void gimbal_task(void const *pvParameters)
 		  Motor_DM_Normal_TIM_Send_PeriodElapsedCallback(&gimbal_control.DM_j4310.motor_j4310);
     }
       vTaskDelay(1);
-//#if INCLUDE_uxTaskGetStackHighWaterMark
-//            gimbal_high_water = uxTaskGetStackHighWaterMark(NULL);
-//#endif
+#if INCLUDE_uxTaskGetStackHighWaterMark
+            gimbal_high_water = uxTaskGetStackHighWaterMark(NULL);
+#endif
     }
 //    }
 }
